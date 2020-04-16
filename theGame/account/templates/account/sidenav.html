@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<!--link for doing views/templates: https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Home_page -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href = "style.css" rel = "stylesheet">
+        <title>Mental Combat</title>
+    </head>
+
+    <body>
+        <div id="mySidenav" class="sidenav">
+            <a href="#">Home</a>
+            <a href="#">Logout</a>
+            <button id="help-btn">Help</button>
+        </div>
+
+        <div id="Modal" class="modal">
+            <div id="Help" class="modal-content">
+                <p>
+                    Here are some quick instructions on how this game works...
+
+                </p>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        var modal = document.getElementById("Modal");
+        var btn = document.getElementById("help-btn");
+
+        //open modal when click button
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        //click outside modal closes it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</html>
