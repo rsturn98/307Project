@@ -4,6 +4,9 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from account.models import *
+from django.db import IntegrityError
+from . import forms
 
 # Create your views here.
 def index(request):
@@ -12,6 +15,16 @@ def index(request):
 @login_required
 def history(request):
     return render(request, "game-history.html")
+
+@login_required
+def list_characters(request):
+    characters = []
+    for c in Character.objects.all():
+        characters.append({
+            'image_url': c.image_url
+        })
+    context = {'characters': characters}
+    return render(request, 'characters.html', context)
 
 def createacct(request):
     context = {}
@@ -27,7 +40,7 @@ def createacct(request):
                 form.add_error('username', 'Username is taken')
 
         context['form'] = form   
-    return render(request, 'account/createacct.html', context)
+    return render(request, 'createacct.html', context)
 
 def do_login(request):
     context = {}
@@ -45,7 +58,7 @@ def do_login(request):
             else:
                 form.add_error(None, 'Unable to log in')
         context['form'] = form
-    return render(request, 'account/login.html', context)
+    return render(request, 'login.html', context)
 
 def do_logout(request):
     logout(request)

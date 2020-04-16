@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+{% extend sidenav.html %}
+<html>
+    <body>
+        {% for c in characters %}
+            {{c.image_url}}
+        {% endfor %}
+    </body>
+</html>

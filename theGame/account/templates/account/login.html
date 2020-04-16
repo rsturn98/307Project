@@ -1,22 +1,27 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 <!--login-->
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href = "style.css" rel = "stylesheet">
+        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
         <title>Mental Combat</title>
     </head>
 
     <body>
         <h1>Sign In</h1>
+        {{ form.non_field_errors }}
         <section class="form-at">
             <form action="" method="post">
+                {% csrf_token %}
                 Username:
-                <input type="text" name="username"> <br>
+                <input type="text" name="username"> 
+                {{ form.username.errors }} <br>
                 Password: 
-                <input type="text" name="password"> <br>
-                <input type="submit"/>
+                <input type="password" name="password" />
+                {{ form.password.errors }} <br>
+                <input type="submit" value="Login"/>
             </form>
         </section>
     </body>
