@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-{% extend sidenav.html %}
+{% include "sidenav.html" %}
 <!--player main page-->
 <html>
 
     <body>
-        <h1> Welcome Player PlaceHolder </h1> <br>
-            <button class="home-btn" >RESUME GAME</button> <br>
-            <button class="home-btn" >GAME HISTORY</button> <br>
-            <button class="home-btn" >START NEW GAME</button>
+        <h1> Welcome Player {{user}} </h1> <br>
+        <button class="home-btn" >RESUME GAME</button> <br>
+        <a href="{% url 'game-history' %}"><button class="home-btn" >GAME HISTORY</button></a> <br>
+        <a href="{% url 'game-play' %}"><button class="home-btn" >START NEW GAME</button></a>
     </body>
 
 

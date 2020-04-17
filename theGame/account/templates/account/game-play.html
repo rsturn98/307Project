@@ -1,5 +1,14 @@
 <!DOCTYPE html>
-{% extend sidenav.html %}
+{% include 'sidenav.html' %}
+{% load static %}
 <html>
+<body>
+    <canvas id = "myGame" width = "200" height = "200" 
+        style = "border: 2px solid Black;">
+        <script src = "{% static 'account/load_game.js' %}">
+        CR1 = "{% static 'account/bard-drawing-4.png' %}";
+        CR2 = "{% static 'account/bard-drawing-5.png' %}";
+        </script>
+</body>
 
 </html>

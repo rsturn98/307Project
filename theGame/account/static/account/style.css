@@ -18,6 +18,19 @@ table, th, td {
     margin-right:auto;
 }
 
+canvas { 
+    position: absolute; 
+    left: 0px; 
+    top: 0px; 
+    width: 90%; 
+    height: 70%; 
+    background-image: url('background.jpg');
+    background-size: 90% 70%;
+    background-repeat: no-repeat; 
+    background-attachment: fixed; 
+    image-rendering: pixelated;
+}
+
 .home-btn {
     background-color: black;
     color: white;
@@ -58,8 +71,7 @@ footer {
     
 }
 
-
-.sidenav a, button {
+button {
     background-color: white;
     color: black;
     padding: 8px;
@@ -69,7 +81,8 @@ footer {
     transition: 0.5s;
     margin-top: 10px;
 }
-.sidenav a:hover, button:hover {
+
+button:hover {
     background-color: darkslategray;
     color: white;
 }
@@ -93,4 +106,29 @@ footer {
     padding: 20px;
     border: 1px solid gray;
     width: 60%;
+}
+
+.row::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+  
+/* Create two equal columns that sits next to each other */
+.column {
+    display:flex;
+    padding: 0 4px;
+    height: 10cm;
+
+}
+
+
+.column img {
+    margin-top: 8px;
+    vertical-align: middle;
+    opacity: 0.80;
+}
+
+.column img:hover {
+opacity: 1.0;
 }

@@ -1,9 +1,35 @@
 <!DOCTYPE html>
-{% extend sidenav.html %}
 <html>
+    {% load static %}
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
+        <title>Mental Combat</title>
+    </head>
     <body>
-        {% for c in characters %}
-            {{c.image_url}}
-        {% endfor %}
+        
+        <h1>Select Your Avatar</h1>
+        <div class="row">
+                <div class="column">
+                        <!--{% for c in characters %}
+                        <img src=  alt="Snow" style="width:100%">
+                        {% endfor %}-->
+                        <img src= "{% static 'account/bard-drawing-1.png' %}"  alt="S1">
+                        <img src= "{% static 'account/bard-drawing-2.png' %}"  alt="S2">
+                        <img src= "{% static 'account/bard-drawing-3.png' %}"  alt="S3">
+                        
+        
+                    </div>
+                    <div class="column">
+                            <img src= "{% static 'account/bard-drawing-4.png' %}"  alt="S4">
+                        <img src= "{% static 'account/bard-drawing-5.png' %}"  alt="S5">
+                        <img src= "{% static 'account/bard-drawing-6.png' %}"  alt="S6">
+                        <img src= "{% static 'account/bard-drawing-7.png' %}"  alt="S7">
+                    </div>            
+        </div>
+        
     </body>
+    <script>
+    </script>
 </html>
