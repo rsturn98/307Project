@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% include 'sidenav.html' %}
+{% include 'account/sidenav.html' %}
 {% load static %}
 <html>
     <head>
@@ -20,7 +20,7 @@
                 context.drawImage(image2, 200-x_char, 100, x_char, y_char);
             } // end function draw
             
-            window.addEventListener( "load", draw, false );
+            window.addEventListener( "load", draw, false);
         </script>
     </head>
 <body>

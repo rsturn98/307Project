@@ -1,0 +1,18 @@
+{% include "account/sidenav.html" %}
+<body>
+<h1>Game History<h1>
+<table>
+<tr>
+    <th>Date</th>
+    <th>Opponent</th>
+    <th>Success</th>
+</tr>
+{% for b in battles %}
+<tr>
+    <td>b.date</td>
+    <td>b.opp</td>
+    <td>b.win</td>
+</tr>
+{% endfor %}
+</table>
+</body>

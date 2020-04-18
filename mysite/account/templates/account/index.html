@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+{% load static %}
+<!--main page for the game-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
+    <title>Mental Combat</title>
+</head>
+
+<body class="home">
+    
+    <h2>Welcome to The Game</h2>
+    <h1>Mental Combat</h1> <!-- random name I came up with -->
+
+    <a href="{% url 'login' %}"><button class="home-btn">LOGIN </button></a>
+    <a href="{% url 'new-account' %}"><button class="home-btn">CREATE ACCOUNT</button></a>
+    
+    <footer> Game created for COMP 307 Winter 2020 Final Project </footer>
+</body>
+
+</html>
+
