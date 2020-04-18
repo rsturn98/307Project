@@ -27,19 +27,31 @@ def history(request):
     return render(request, "game-history.html")
 
 #LIST CHARACTERS CHOICES
+@login_required
 def list_characters(request):
-    if request.method == 'POST':
-        #add in form portion
-        #myCharacter = Character.objects.cre
-        return HttpResponseRedirect(reverse('login'))
-    characters = []
-    for c in os.listdir(os.path.join(settings.BASE_DIR, 'account', 'static', 'account')):
-        if c.startswith('bard'):
-            characters.append({
-                'image': c
-            })
-    context = {'characters': characters}
-    return render(request, 'characters.html', context)
+    if not Character.objects.filter(user=request.user):
+        if request.method == 'POST':
+            #add in form portion
+            if 'choice' in request.POST:
+                c = Character(
+                    user = request.user,
+                    image_url = request.POST['choice']
+                )
+                c.save()
+                #myCharacter = Character.objects.cre
+                return HttpResponseRedirect(reverse('player-main'))
+        characters = []
+        for c in os.listdir(os.path.join(settings.BASE_DIR, 'account', 'static', 'account')):
+            if c.startswith('bard'):
+                characters.append({
+                    'image': c
+                })
+        context = {
+            'characters': characters,
+            'error_message': 'You must select a choice'
+        }
+        return render(request, 'characters.html', context)
+    return HttpResponseRedirect(reverse('player-main'))
 
 #MAIN SCREEN FOR PLAYERS
 @login_required
@@ -57,8 +69,8 @@ def createacct(request):
               user = User.objects.create_user(
                 form.cleaned_data['username'], 
                 password=form.cleaned_data['password'])
-                #return HttpResponseRedirect(reverse('characters'))
-              return HttpResponseRedirect(reverse('login'))
+              return HttpResponseRedirect(reverse('characters'))
+              #return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
                 form.add_error('username', 'Username is taken')
 
@@ -78,7 +90,7 @@ def do_login(request):
                 login(request, user)
                 if 'next' in request.GET:
                     return HttpResponseRedirect(request.GET['next'])
-                return HttpResponseRedirect(reverse('player-main'))
+                return HttpResponseRedirect(reverse('characters'))
             else:
                 form.add_error(None, 'Unable to log in')
         context['form'] = form

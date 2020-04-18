@@ -17,3 +17,20 @@
 </body>
 
 </html>
+
+<script>
+    var image1 = new Image();
+    image1.src = "{% static 'account/bard-drawing-4.png' %}";
+    var image2 = new Image();
+    image2.src = "{% static 'account/bard-drawing-4.png' %}";
+
+    function draw() 
+    {
+    var canvas = document.getElementById("myimage");
+    var context = canvas.getContext("2d")
+    context.drawImage(image1, 0, 0, 30, 50); 
+    context.drawImage(image2, 100, 100, 30, 50); 
+    } // end function draw
+    
+    window.addEventListener( "load", draw, false );
+        </script>

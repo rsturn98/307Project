@@ -4,17 +4,17 @@ var context = canvas.getContext("2d")
 var x_char = 30;
 var y_char = 50;
 
-function drawCharacter() 
+/*function drawCharacter() 
 {
     var image1 = new Image();
-    image1.src = CR1;//"bard-drawing-5.png";
+    image1.src = "bard-drawing-5.png";
     var image2 = new Image();
-    image2.src = CR2;//"bard-drawing-4.png";
+    image2.src = "bard-drawing-4.png";
     context.imageSmoothingEnabled = false;
     image1.onload = function(){context.drawImage(image1, 0, 200-y_char, x_char, y_char); }
     image2.onload = function(){ context.drawImage(image2, 200-x_char, 100, x_char, y_char);}
 
-} 
+} */
 //resource: https://veerasundar.com/blog/2014/10/canvas-drawing-circle-meter-wi
 
 function rad(deg)
@@ -48,8 +48,9 @@ function drawHealth(x,y, percent)
     context.fill();
 }
 
-
-    drawCharacter();
+    //window.addEventListener ? 
+    //window.addEventListener("load",drawCharacter,false) : 
+    //window.attachEvent && window.attachEvent("onload",drawCharacter);
     drawHealth(10, 190-y_char, 50);//for character 1
     drawHealth(210-x_char, 90, 70); //for character 2
 
