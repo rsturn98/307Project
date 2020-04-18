@@ -72,8 +72,8 @@ def createacct(request):
               user = User.objects.create_user(
                 form.cleaned_data['username'], 
                 password=form.cleaned_data['password'])
-              return HttpResponseRedirect(reverse('characters'))
-              #return HttpResponseRedirect(reverse('login'))
+              #return HttpResponseRedirect(reverse('characters'))
+              return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
                 form.add_error('username', 'Username is taken')
 
