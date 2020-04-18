@@ -1,0 +1,151 @@
+<!-- chat/templates/chat/room.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+</head>
+<body>
+	<b> {{game.player1User}} vs {% if game.player2User %} {{game.player2User}} {% else %} someone? {% endif %} </b> </br>
+    <textarea id="chat-log" cols="100" rows="10">
+{% for m in messages %}
+{{m.author}}: {{m.content}}
+{% endfor %}    
+</textarea><br/>
+{% if game.player1User == user and not game.player1Char %} 
+<form action="" method="post">
+{% csrf_token %}
+{{ charForm }}
+<input type="submit">
+<form action="" method="post">
+{% elif game.player2User == user and not game.player2Char %} 
+<form action="" method="post">
+{% csrf_token %}
+{{ charForm }}
+<input type="submit">
+{% endif %}
+<b>{{game.player1Char}}'s Stats</b></br>
+ HP <div id="p1HP">{{game.player1HP}}</div>
+ Attack <div id="p1Attack">{{game.player1Attack}}</div>
+ Dodge <div id="p1Dodge">{{game.player1Dodge}}</div> 
+<b>{{game.player2Char}}</b> </br> 
+ HP <div id="p2HP">{{game.player2HP}}</div> 
+ Attack <div id="p2Attack">{{game.player2Attack}}</div> 
+ Dodge <div id="p2Dodge">{{game.player2Dodge}}</div> 
+</form></br>
+    <input id="chat-message-input" type="text" size="100"/><br/>
+    <input id="chat-message-submit" type="button" value="Send"/>
+    {% if user == game.player1User or user == game.player2User %}
+    <input id="attack-button" type="button" value="Attack"/>
+    <input id="dodge-button" type="button" value="Dodge"/>
+    <input id="special-button" type="button" value="Special"/>
+    <input id="powerup-button" type="button" value="Power Up"/>
+    {% endif %}
+    {% if game.player1User == user %}</br> {% elif game.player2User %} </br>{% else %} 
+    <input id="join-button" type="button" value="Join"/>
+    {% endif %}
+</body>
+<script>
+    var roomName = "{{ room_name|escapejs }}";
+    var textarea = document.getElementById('chat-log');
+    textarea.scrollTop = textarea.scrollHeight;
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/' + roomName + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        var author = data['author'];
+        var action = data['action'];
+        var update = data['update'];
+        var p1HP = data['p1HP'];
+        var p1Attack = data['p1Attack'];
+        var p1Dodge = data['p1Dodge'];
+        var p2HP = data['p2HP'];
+        var p2Attack = data['p2Attack'];
+        var p2Dodge = data['p2Dodge'];
+        console.log(data);
+
+        document.querySelector('#chat-log').value += (author+': '+message + '\n\n');
+        
+        textarea.scrollTop = textarea.scrollHeight;
+        console.log(update);
+        if (update == "Yes"){
+            console.log("Updating game state");
+            document.getElementById('p1HP').innerHTML = p1HP;
+            document.getElementById('p1Attack').innerHTML = p1Attack;
+            document.getElementById('p1Dodge').innerHTML = p1Dodge;
+            document.getElementById('p2HP').innerHTML = p2HP;
+            document.getElementById('p2Attack').innerHTML = p2Attack;
+            document.getElementById('p2Dodge').innerHTML = p2Dodge;
+        }
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+	    'author': '{{ user }}',
+            'action': 'Chat'
+        }));
+
+        messageInputDom.value = '';
+    };
+    {% if user == game.player1User or user == game.player2User %}
+    document.querySelector('#attack-button').onclick = function(e) {
+        var testerSend = 'Attack';
+        chatSocket.send(JSON.stringify({
+            'message': '{{ user }} attacked!',
+            'action': testerSend,
+            'author': '{{ user }}'
+        }));
+    };
+    document.querySelector('#dodge-button').onclick = function(e) {
+        var testerSend = 'Dodge';
+        chatSocket.send(JSON.stringify({
+            'message': '{{ user }} dodged!',
+            'action': testerSend,
+            'author': '{{ user }}'
+        }));
+    };
+    document.querySelector('#special-button').onclick = function(e) {
+        var testerSend = 'Special';
+        chatSocket.send(JSON.stringify({
+            'message': '{{ user }} used a special attack!',
+            'action': testerSend,
+            'author': '{{ user }}'
+        }));
+    };
+    document.querySelector('#powerup-button').onclick = function(e) {
+        var testerSend = 'Power';
+        chatSocket.send(JSON.stringify({
+            'message': '{{ user }} powered up!',
+            'action': testerSend,
+            'author': '{{ user }}'
+        }));
+    };
+    {% endif %}
+    document.querySelector('#join-button').onclick = function(e) {
+        var testerSend = 'Join';
+        chatSocket.send(JSON.stringify({
+            'message': '{{ user }} joined as player 2!',
+            'action': testerSend,
+            'author': '{{ user }}'
+        }));
+	location.reload();
+    };
+</script>
+</html>
