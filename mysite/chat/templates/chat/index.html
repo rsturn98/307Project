@@ -34,10 +34,22 @@
 </head>
 <body>
     Enter an existing match or start a new one<br/>
-    <button type="button" class="collapsible">Existing Games</button>
+    <button type="button" class="collapsible">Completed Games</button>
         <div class="content">
-    {% for room in rooms %}
-    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}}{% if room.player2User %} vs {{room.player2User}} {% else %}, awaiting challenger{% endif %} </br>
+    {% for room in rooms %}{% if room.winner %}
+    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} vs {{room.player2User}} </br>{% endif %}
+    {% endfor %}
+        </div>
+    <button type="button" class="collapsible">In Progress Games</button>
+        <div class="content">
+    {% for room in rooms %}{% if not room.winner and room.player2User %}
+    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} vs {{room.player2User}} </br>{% endif %} 
+    {% endfor %}
+        </div>
+    <button type="button" class="collapsible">Looking for Challenger</button>
+        <div class="content">
+    {% for room in rooms %}{% if not room.player2User %}
+    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} Awaiting Challenger! </br>{% endif %} 
     {% endfor %}
         </div>
     <input id="room-name-input" type="text" size="100"/><br/>
