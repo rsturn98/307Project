@@ -1,16 +1,47 @@
 <!-- chat/templates/chat/index.html -->
 <!DOCTYPE html>
 {% include 'account/sidenav.html' %}
-{% include 'account/game-play.html' %}
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
+<style>	/* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+</style>
 </head>
 <body>
-    What chat room would you like to enter?<br/>
+    Enter an existing match or start a new one<br/>
+    <button type="button" class="collapsible">Existing Games</button>
+        <div class="content">
+    {% for room in rooms %}
+    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}}{% if room.player2User %} vs {{room.player2User}} {% else %}, awaiting challenger{% endif %} </br>
+    {% endfor %}
+        </div>
     <input id="room-name-input" type="text" size="100"/><br/>
-    <input id="room-name-submit" type="button" value="Enter"/>
+    <input id="room-name-submit" type="button" value="Create New Game"/>
 {% if error %}
 	<b>Error: Room names must be alphanumeric (no special characters or whitepsace)</b>
 {% endif %}
@@ -26,6 +57,21 @@
             var roomName = document.querySelector('#room-name-input').value;
             window.location.pathname = '/chat/' + roomName + '/';
         };
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
     </script>
 </body>
 </html>

@@ -30,3 +30,6 @@ class Game(models.Model):
     player2Action = models.TextField(blank=True, null=True) #next action
     
     gameOver = models.BooleanField(default=False)
+
+    date = models.DateField(auto_now_add=True)
+    winner = models.TextField(blank=True,null=True)

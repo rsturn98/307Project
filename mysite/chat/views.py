@@ -5,11 +5,15 @@ from . import models, forms, characters, charform
 
 @login_required(redirect_field_name='')
 def index(request):
+    roomList = models.Game.objects.all()
+    print(roomList)
     if request.method == 'POST':
         form = forms.RoomForm(request.POST)
         if form.is_valid():
             form.save()
-    return render(request, 'chat/index.html', {'error': False})
+    return render(request, 'chat/index.html', {'error': False,
+        'rooms': roomList
+        })
 
 @login_required(redirect_field_name='')
 def room(request, room_name):

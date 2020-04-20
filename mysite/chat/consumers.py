@@ -63,29 +63,33 @@ class ChatConsumer(AsyncWebsocketConsumer):
             checker = [False]
             await game.actionChecker(room_name, checker)
             print(checker[0])
+            turnRecord = [""]
             if checker[0]:
                 print("Both Actions Good to Go!")
-                await game.turn(room_name)
+                await game.turn(room_name, turnRecord)
             
             gameState = []
             await game.getGame(room_name, gameState)
             print(gameState)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'attack',
-                    'message': message,
-                    'author': name,
-                    'update': 'Yes',
-                    'p1HP':gameState[0],
-                    'p1Attack':gameState[1],
-                    'p1Dodge':gameState[2],
-                    'p2HP':gameState[3],
-                    'p2Attack':gameState[4],
-                    'p2Dodge':gameState[5]
-                }
-            )
-            await game.addChat(self.room_group_name, message, name)
+            if turnRecord[0] != "":
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'attack',
+                        'message': message,
+                        'author': name,
+                        'update': 'Yes',
+                        'p1HP':gameState[0],
+                        'p1Attack':gameState[1],
+                        'p1Dodge':gameState[2],
+                        'p2HP':gameState[3],
+                        'p2Attack':gameState[4],
+                        'p2Dodge':gameState[5],
+                        'turnRecord': turnRecord[0]
+                    }
+                )
+            if turnRecord[0] != "":
+                await game.addChat(self.room_group_name, turnRecord[0], "Server")
 #
 #        if action == "Dodge":
 #            print("Dodging")
@@ -152,8 +156,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def attack(self, event):
-        message = event['message']
-        author = event['author']
+        message = ""
+        author = "Server"
         update = event['update']
         p1HP = event['p1HP']
         p1Attack = event['p1Attack']
@@ -161,18 +165,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         p2HP = event['p2HP']
         p2Attack = event['p2Attack']
         p2Dodge = event['p2Dodge']
+        turnRecord = event['turnRecord']
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'message': message,
             'author': author,
-            'action': 'Attack',
+            'action': 'Update',
             'update': 'Yes',
             'p1HP':p1HP,
             'p1Attack':p1Attack,
             'p1Dodge':p1Dodge,
             'p2HP':p2HP,
             'p2Attack':p2Attack,
-            'p2Dodge':p2Dodge
+            'p2Dodge':p2Dodge,
+            'turnRecord': turnRecord
         }))
     async def dodge(self, event):
         message = event['message']

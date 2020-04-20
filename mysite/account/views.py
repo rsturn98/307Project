@@ -12,7 +12,7 @@ from django.conf import settings
 from django.templatetags.static import static
 from django.contrib.staticfiles.utils import get_files
 from django.contrib.staticfiles.storage import StaticFilesStorage
-
+from chat import models as chatModels
 # Create your views here.
 def index(request):
     return render(request, "account/index.html")
@@ -26,8 +26,11 @@ def chat(request):
 #GAME-HISTORY
 @login_required
 def history(request):
-    context = {'battles': ''} #EDIT -- needs to used database
-    return render(request, "account/game-history.html")
+    name = str(request.user.get_username())
+    gameList = roomList = chatModels.Game.objects.all()
+    context = {'battles': gameList, 
+               'user':name} #EDIT -- needs to used database
+    return render(request, "account/game-history.html", context)
 
 #LIST CHARACTERS CHOICES
 @login_required

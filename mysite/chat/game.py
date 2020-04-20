@@ -61,9 +61,25 @@ def checkWin(gameObject):
     print(gameObject.player1HP, gameObject.player2HP)
     if gameObject.player1HP <= 0 or gameObject.player2HP <= 0:
         gameObject.gameOver = True
+        if gameObject.player1HP <= 0:
+            gameObject.winner = gameObject.player1User
+        else:
+            gameObject.winner = gameObject.player2User
         gameObject.save()
         return True
     return False
+
+def special(player1,char1,player2,char2,turnRecord):
+    #define a special attack for each character
+    if char1.Name == "Wizard":
+        player2.HP = player2.HP - 20
+        turnRecord[0] = turnRecord[0] + "%s uses a magic missile!\n"%(char1.Name)
+    elif char1.Name == "Brutus":
+        player1.HP = player1.HP + 50
+        turnRecord[0] = turnRecord[0] + "%s gets a second wind!\n"%(char1.Name)
+    elif char1.Name == "Terminator":
+        player2.Dodge = -100
+        turnRecord[0] = turnRecord[0] + "%s locks onto target!\n"%(char1.Name)
 
 def saveGame(player1,player2,gameObject):
     if player1.Name == gameObject.player1User:
@@ -92,7 +108,7 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
     #let's just add more shit to the model, why not
     #yeah it's gross
     print("do we get to resolve?")
-    turnRecord = ""
+    turnRecord = [""]
     
     print(checkWin(gameObject))
     if checkWin(gameObject)==True:
@@ -101,61 +117,71 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
     if act1 == "Attack":
         if random.randint(1,100) > player2.Dodge:
             player2.HP = player2.HP - player1.Attack
-            turnRecord = turnRecord+"%s attacks %s, dealing %d damage!\n"%(char1.Name,char2.Name, player1.Attack)
+            turnRecord[0] = turnRecord[0]+"%s attacks %s, dealing %d damage!\n"%(char1.Name,char2.Name, player1.Attack)
         else:
-            turnRecord = turnRecord+"%s's attack misses %s!\n"%(char1.Name,char2.Name)
+            turnRecord[0] = turnRecord[0]+"%s's attack misses %s!\n"%(char1.Name,char2.Name)
         player1.Attack = char1.Attack #reset any attack bonuses
         player2.Dodge = char2.Dodge #reset dodge bonuses
         saveGame(player1,player2,gameObject)
         if checkWin(gameObject):
-            turnRecord = turnRecord + "And the game is over!"
-            return turnRecord
+            turnRecord[0] = turnRecord[0] + "And the game is over!"
+            return turnRecord[0]
     elif act1 == "Dodge":
         player1.Dodge = char1.Dodge + 50
-        turnRecord = turnRecord+"%s is ready to dodge!\n"%(char1.Name)
+        turnRecord[0] = turnRecord[0]+"%s is ready to dodge!\n"%(char1.Name)
         saveGame(player1,player2,gameObject)
-    elif act1 == "Power Up":
+    elif act1 == "Power":
         player1.Attack = char1.Attack*2
-        turnRecord = turnRecord+"%s readies to strike!\n"%(char1.Name)
+        turnRecord[0] = turnRecord[0]+"%s readies to strike!\n"%(char1.Name)
         print(player1.Attack)
         saveGame(player1,player2,gameObject)
     elif act1 == "Special":
         a = 1 #aka do nothing yet
+        special(player1,char1,player2,char2,turnRecord)
+        saveGame(player1,player2,gameObject)
+        if checkWin(gameObject):
+            turnRecord[0] = turnRecord[0] + "And the game is over!"
+            return turnRecord[0]
     #now for player2
     if act2 == "Attack":
         if random.randint(1,100) > player1.Dodge:
             player1.HP = player1.HP - player2.Attack
-            turnRecord = turnRecord+"%s attacks %s, dealing %s damage!\n"%(char2.Name,char1.Name, player2.Attack)
+            turnRecord[0] = turnRecord[0]+"%s attacks %s, dealing %s damage!\n"%(char2.Name,char1.Name, player2.Attack)
         else:
-            turnRecord = turnRecord+"%s's attack misses %s!\n"%(char2.Name,char1.Name)
+            turnRecord[0] = turnRecord[0]+"%s's attack misses %s!\n"%(char2.Name,char1.Name)
         player2.Attack = char2.Attack #reset any attack bonuses
         player1.Dodge = char1.Dodge #reset dodge bonuses
         saveGame(player1,player2,gameObject)
         if checkWin(gameObject):
-            turnRecord = turnRecord + "And the game is over!"
-            return turnRecord
+            turnRecord[0] = turnRecord[0] + "And the game is over!"
+            return turnRecord[0]
     elif act2 == "Dodge":
         player2.Dodge = char2.Dodge + 50
-        turnRecord = turnRecord+"%s is ready to dodge!\n"%(char2.Name)
+        turnRecord[0] = turnRecord[0]+"%s is ready to dodge!\n"%(char2.Name)
         saveGame(player1,player2,gameObject)
-    elif act2 == "Power Up":
+    elif act2 == "Power":
         player2.Attack = char2.Attack*2
-        turnRecord = turnRecord+"%s readies to strike!\n"%(char2.Name)
+        turnRecord[0] = turnRecord[0]+"%s readies to strike!\n"%(char2.Name)
         saveGame(player1,player2,gameObject)
     elif act2 == "Special":
         a = 1 #aka do nothing yet
+        special(player2,char2,player1,char1,turnRecord)
+        saveGame(player1,player2,gameObject)
+        if checkWin(gameObject):
+            turnRecord[0] = turnRecord[0] + "And the game is over!"
+            return turnRecord[0]
     print(gameObject.player1Action, gameObject.player2Action)
     gameObject.player1Action = None
     gameObject.player2Action = None
     gameObject.save()
     print(gameObject.player1Action, gameObject.player2Action)
-    print(turnRecord)
+    print(turnRecord[0])
     saveGame(player1,player2,gameObject)
-    return turnRecord
+    return turnRecord[0]
 
 
 @database_sync_to_async
-def turn(room_name):
+def turn(room_name,turnRecord):
     #apply the actions, based on the characters, then set the current actions to null so we can do the next turn
     #-2: normal moves, resolved in order of character speed
     #we should also record the turn so we can send it to the game and have it play out in the right order in the browser
@@ -175,12 +201,12 @@ def turn(room_name):
         print("P1 goes first")
         player1 = Player(gameObject.player1User,gameObject.player1HP, gameObject.player1Attack, gameObject.player1Dodge)        
         player2 = Player(gameObject.player2User,gameObject.player2HP, gameObject.player2Attack, gameObject.player2Dodge)
-        print(resolve(player1, act1, player2, act2, char1, char2, gameObject))
+        turnRecord[0]=resolve(player1, act1, player2, act2, char1, char2, gameObject)
     else:
         print("P2 goes first")
         player1 = Player(gameObject.player2User,gameObject.player2HP, gameObject.player2Attack, gameObject.player2Dodge)        
         player2 = Player(gameObject.player1User,gameObject.player1HP, gameObject.player1Attack, gameObject.player1Dodge)
-        print(resolve(player1, act2, player2, act1, char2, char1, gameObject))
+        turnRecord[0]=resolve(player1, act2, player2, act1, char2, char1, gameObject)
     
 
 
