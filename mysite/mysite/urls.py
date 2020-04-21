@@ -20,6 +20,7 @@ import django.contrib.auth
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('pay/', include('payment.urls')),
     path('chat/', include('chat.urls')),
     path('accounts/', include('account.urls')),
     path('', include('account.urls'))

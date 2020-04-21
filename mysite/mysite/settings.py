@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'account',
     'channels',
     'chat',
+    'payment.apps.PaymentConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -102,6 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+STRIPE_SECRET_KEY = 'sk_test_O9m024gioEhp9OLNYBbPhJB200IjcorrC8'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_onjHkV6FDGtg55Ne7D9nVOvq00lKj5HSVX'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

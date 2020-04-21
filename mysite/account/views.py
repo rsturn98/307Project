@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import stripe
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
@@ -17,12 +18,14 @@ from chat import models as chatModels
 def index(request):
     return render(request, "account/index.html")
 
+@login_required
 def play(request):
     filterChar = Character.objects.filter(user=request.user)
     myChar = filterChar[0]
     context = {'character': myChar.image_url}
     return render(request, "account/game-play.html", context)
 
+@login_required
 def chat(request):
     return HttpResponseRedirect('/chat/')
 
@@ -73,7 +76,6 @@ def createacct(request):
               user = User.objects.create_user(
                 form.cleaned_data['username'], 
                 password=form.cleaned_data['password'])
-              #return HttpResponseRedirect(reverse('characters'))
               return HttpResponseRedirect(reverse('login'))
             except IntegrityError:
                 form.add_error('username', 'Username is taken')
@@ -92,6 +94,10 @@ def do_login(request):
               password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
+                filterCharge = list(filter(lambda value: value.description==request.user, stripe.Charge.list())) #EDIT
+                #filterCharge = []
+                if not filterCharge: #EDIT
+                    return HttpResponseRedirect('/pay/')
                 if 'next' in request.GET:
                     return HttpResponseRedirect(request.GET['next'])
                 return HttpResponseRedirect(reverse('characters'))

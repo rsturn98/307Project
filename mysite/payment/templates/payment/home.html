@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
+        <title>Mental Combat</title>
+    </head>
+    <body>
+        
+        <section class="form-at">
+        {% block content %}
+            <h2>One-Time Payment to Activate Account</h2>
+
+            <form action="{% url 'charge' %}" method="post">
+                {% csrf_token %}
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                    data-key="{{ key }}"
+                    data-description="Activation Fee"
+                    data-amount="500"
+                    data-locale="auto">
+                </script>
+            </form>
+            <a href="{% url 'logout' %}">Back</a>
+        {% endblock %}
+        </section>
+    </body>
+</html>
