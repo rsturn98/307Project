@@ -7,10 +7,17 @@
     <th>Opponent</th>
     <th>Winner</th>
 </tr>
-{% for b in battles %} {% if b.player1User == user and b.player2User %}
+{% for b in battles %} 
+{% if b.player1User == user and b.player2User %}
 <tr>
     <td>{{b.date}}</td>
     <td>{{b.player2User}}</td>
+    <td>{% if b.winner %}{{b.winner}}{% else %}Still to be determined{% endif %}</td>
+</tr>
+{% elif b.player2User == user and b.player1User %}
+<tr>
+    <td>{{b.date}}</td>
+    <td>{{b.player1User}}</td>
     <td>{% if b.winner %}{{b.winner}}{% else %}Still to be determined{% endif %}</td>
 </tr>
 {% endif %}
