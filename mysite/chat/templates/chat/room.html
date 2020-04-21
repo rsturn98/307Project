@@ -8,7 +8,7 @@
     <title>Chat Room</title>
 </head>
 <body>
-{% block content %}
+    {% block content %}
     <b> {{game.player1User}} vs {% if game.player2User %} {{game.player2User}} {% else %} someone? {% endif %} </b> </br>
     <textarea id="chat-log" cols="100" rows="10">
     {% for m in messages %}
@@ -52,8 +52,8 @@
         {% if game.player1User == user %}</br> {% elif game.player2User %} </br>{% else %} 
         <input id="join-button" type="button" value="Join"/>
         {% endif %}
-    
-{% endblock %}
+    {% endblock %}
+
 
 </body>
 <script>

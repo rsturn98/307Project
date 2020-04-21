@@ -94,7 +94,7 @@ def do_login(request):
               password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
-                filterCharge = list(filter(lambda value: value.description==request.user, stripe.Charge.list())) #EDIT
+                filterCharge = list(filter(lambda value: value.description==str(request.user), stripe.Charge.list())) #EDIT
                 #filterCharge = []
                 if not filterCharge: #EDIT
                     return HttpResponseRedirect('/pay/')

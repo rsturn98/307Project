@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from . import models, forms, characters, charform
+from . import models, forms, characters
 # Create your views here.
 
 @login_required(redirect_field_name='')
@@ -51,7 +51,7 @@ def room(request, room_name):
         roomObject = models.Rooms.objects.get(roomname=room_name)
         newGame = models.Game(gameRoom=roomObject, player1User=name)
         newGame.save()
-    charForm = charform.CharForm()
+    charForm = forms.CharForm()
     return render(request, 'chat/room.html', {
         'room_name': room_name,
         'messages': models.ChatMessage.objects.filter(room=room_name),
