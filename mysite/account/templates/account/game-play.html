@@ -3,11 +3,12 @@
 {% load static %}
 <html>
     <head>
+        <title>Chat Room</title>
         <script>
             var image1 = new Image();
-            image1.src = "{% static 'account/bard-drawing-4.png' %}";
+            image1.src = "{{character}}";
             var image2 = new Image();
-            image2.src = "{% static 'account/bard-drawing-5.png' %}";
+            image2.src = "{% static 'account/shadow.png' %}"; //opponent
 
             function draw() 
             {
@@ -15,17 +16,28 @@
                 var context = canvas.getContext("2d")
                 var x_char = 30;
                 var y_char = 50;
+                var height = canvas.height;
+                var width = canvas.width;
                 context.imageSmoothingEnabled = false;
-                context.drawImage(image1, 0, 200-y_char, x_char, y_char);
-                context.drawImage(image2, 200-x_char, 100, x_char, y_char);
+                context.drawImage(image1, 0, height-y_char, x_char, y_char);
+                context.drawImage(image2, width-x_char, height/2, x_char, y_char);
             } // end function draw
             
             window.addEventListener( "load", draw, false);
         </script>
+
     </head>
 <body>
-    <canvas id = "myGame" width = "200" height = "200" 
+    <div width = "90%" height = "70%">
+    <canvas id = "myGame" 
         style = "border: 2px solid Black;">
+    </div>
+    <div id="after">
+        {% block content %}
+            <p> writing something really quick, let's see if it shows</p>
+        {% endblock %}
+    </div>
+    
         <!--<script src = "{% static 'account/load_game.js' %}">
         CR1 = "{% static 'account/bard-drawing-4.png' %}";
         CR2 = "{% static 'account/bard-drawing-5.png' %}";

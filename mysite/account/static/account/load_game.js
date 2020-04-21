@@ -3,6 +3,8 @@ var canvas = document.getElementById("myGame");
 var context = canvas.getContext("2d")
 var x_char = 30;
 var y_char = 50;
+var height = canvas.height;
+var width = canvas.width;
 
 /*function drawCharacter() 
 {
@@ -57,6 +59,6 @@ function animate(){
     //window.addEventListener ? 
     //window.addEventListener("load",drawCharacter,false) : 
     //window.attachEvent && window.attachEvent("onload",drawCharacter);
-    drawHealth(10, 190-y_char, 50);//for character 1
-    drawHealth(210-x_char, 90, 70); //for character 2
+    drawHealth(10, height-10-y_char, 50);//for character 1
+    drawHealth(width+10-x_char, height/2-10, 70); //for character 2
 

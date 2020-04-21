@@ -13,7 +13,7 @@
         <h1>Select Your Avatar</h1>
         <form action="{% url 'characters' %}" method="post">
             {% csrf_token %}
-            <div class="row">
+            <div class="row" style = "width: 50%;">
             <div class="column">
                 <!--{% for c in characters %}
                 <img src=  alt="Snow" style="width:100%">
@@ -28,9 +28,9 @@
                 <input type="radio" name="choice" value="{% static 'account/bard-drawing-4.png' %}"><img src= "{% static 'account/bard-drawing-4.png' %}"  alt="S4">
             </div>
             <div class="column">
-                <img src= "{% static 'account/bard-drawing-5.png' %}"  alt="S5">
-                <img src= "{% static 'account/bard-drawing-6.png' %}"  alt="S6">
-                <img src= "{% static 'account/bard-drawing-7.png' %}"  alt="S7">
+                <input type="radio" name="choice" value="{% static 'account/bard-drawing-5.png' %}"><img src= "{% static 'account/bard-drawing-5.png' %}"  alt="S5">
+                <input type="radio" name="choice" value="{% static 'account/bard-drawing-6.png' %}"><img src= "{% static 'account/bard-drawing-6.png' %}"  alt="S6">
+                <input type="radio" name="choice" value="{% static 'account/bard-drawing-7.png' %}"><img src= "{% static 'account/bard-drawing-7.png' %}"  alt="S7">
             </div>            
         </div>
         <input type="submit" value="Choice">

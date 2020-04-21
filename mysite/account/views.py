@@ -18,7 +18,10 @@ def index(request):
     return render(request, "account/index.html")
 
 def play(request):
-    return render(request, "account/game-play.html")
+    filterChar = Character.objects.filter(user=request.user)
+    myChar = filterChar[0]
+    context = {'character': myChar.image_url}
+    return render(request, "account/game-play.html", context)
 
 def chat(request):
     return HttpResponseRedirect('/chat/')
@@ -35,7 +38,8 @@ def history(request):
 #LIST CHARACTERS CHOICES
 @login_required
 def list_characters(request):
-    if not Character.objects.filter(user=request.user):
+    filterChar = Character.objects.filter(user=request.user)
+    if not filterChar:
         if request.method == 'POST':
             #add in form portion
             if 'choice' in request.POST:
@@ -44,19 +48,13 @@ def list_characters(request):
                     image_url = request.POST['choice']
                 )
                 c.save()
+                request.session['character'] = c.image_url
                 #myCharacter = Character.objects.cre
                 return HttpResponseRedirect(reverse('player-main'))
-        characters = []
-        for c in os.listdir(os.path.join(settings.BASE_DIR, 'account', 'static', 'account')):
-            if c.startswith('bard'):
-                characters.append({
-                    'image': c
-                })
-        context = {
-            'characters': characters,
-            'error_message': 'You must select a choice'
-        }
+        context = {'error_message': 'You must select a choice'}
         return render(request, 'account/characters.html', context)
+    myChar = filterChar[0]
+    request.session['character'] = myChar.image_url
     return HttpResponseRedirect(reverse('player-main'))
 
 #MAIN SCREEN FOR PLAYERS

@@ -1,35 +1,68 @@
 <!DOCTYPE html>
 <!--{% include 'sidenav.html' %}-->
-
+<!--width = "200" height = "200"
+width: 90%; height: 70%; background-image: url('background.jpg');background-size: 90% 70%; background-attachment: fixed;-->
 <html>
         <style type = "text/css">
-            canvas { position: absolute; left: 0px; top: 0px; 
-                width: 90%; height: 70%; background-image: url('background.jpg');background-size: 90% 70%;
-    background-repeat: no-repeat; background-attachment: fixed; image-rendering: pixelated;
-    }
+            canvas {
+                width: 90%; height: 70%; 
+            }
          </style>
-    
+    <script>var TEST = 1;</script>
 <body>
-    <canvas id = "myGame" width = "200" height = "200" 
-        style = "border: 2px solid Black;">
-        <script src="load_game.js">
-        </script>
+    <div>
+        show me something
+    </div>
+    <div width = "90%" height = "70%">
+        <canvas id = "myGame"  
+            style = "border: 2px solid Black;">
+        </canvas>
+    </div>
+    <div id="after">
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+        <p> writing something really quick, let's see if it shows</p> <br>
+    </div>
+    <script src="load_game.js">
+        
+    </script>
 </body>
 
 </html>
 
 <script>
-    var image1 = new Image();
-    image1.src = "{% static 'account/bard-drawing-4.png' %}";
-    var image2 = new Image();
-    image2.src = "{% static 'account/bard-drawing-4.png' %}";
+    //var at = document.getElementById("after");
+    /*var can = document.getElementById("myGame");
+    at.style.top = can.style.height;
+
+    //var image1 = new Image();
+    //image1.src = "bard-drawing-4.png";
+    //var image2 = new Image();
+    image2.src = "bard-drawing-4.png"; */
 
     function draw() 
     {
-    var canvas = document.getElementById("myimage");
+    var canvas = document.getElementById("myGame");
     var context = canvas.getContext("2d")
-    context.drawImage(image1, 0, 0, 30, 50); 
-    context.drawImage(image2, 100, 100, 30, 50); 
+    var height = canvas.height*0.7;
+    var width = window.innerWidth*0.9;
+    /*context.fillStyle = "yellow";
+    context.fillRect(width-100, height-100, 30, 50);
+    context.strokeStyle = "royalbllue";
+    context.strokeRect(width-100, height-100, 30, 50);*/
+    var canvas = document.getElementById("myGame");
+         var context = canvas.getContext("2d")
+         /*context.fillStyle = "yellow";
+         context.fillRect(5, 10, width-11, height-11);
+         context.strokeStyle = "royalblue";
+         context.lineWidth = 6;
+         context.strokeRect(4, 9, width-10, height-10);*/
+    //context.drawImage(image1, width, height, 30, 50); 
+    //context.drawImage(image2, width - 10, 100, 30, 50); 
     } // end function draw
     
     window.addEventListener( "load", draw, false );

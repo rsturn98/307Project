@@ -19,15 +19,12 @@ table, th, td {
 }
 
 canvas { 
-    position: absolute; 
-    left: 0px; 
-    top: 0px; 
     width: 90%; 
     height: 70%; 
     background-image: url('background.jpg');
-    background-size: 90% 70%;
+    background-size: 100% 100%;
     background-repeat: no-repeat; 
-    background-attachment: fixed; 
+    background-attachment:scroll; 
     image-rendering: pixelated;
 }
 
@@ -118,15 +115,17 @@ button:hover {
 .column {
     display:flex;
     padding: 0 4px;
-    height: 10cm;
+    height: 200px;
+    width: auto;
 
 }
-
 
 .column img {
     margin-top: 8px;
     vertical-align: middle;
     opacity: 0.80;
+    width: 100%;
+    height: auto;
 }
 
 .column img:hover {

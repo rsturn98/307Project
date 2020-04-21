@@ -57,5 +57,6 @@ def room(request, room_name):
         'messages': models.ChatMessage.objects.filter(room=room_name),
         'user': name,
         'game': models.Game.objects.get(gameRoom=room_name),
-        'charForm': charForm
+        'charForm': charForm,
+        'character': request.session['character']
         })

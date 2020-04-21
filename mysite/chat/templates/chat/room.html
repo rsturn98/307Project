@@ -1,51 +1,60 @@
 <!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
-{% include 'account/sidenav.html' %}
-
+{% extends 'account/game-play.html' %}
+<!--{% include 'account/sidenav.html' %}-->
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>Chat Room</title>
 </head>
 <body>
-	<b> {{game.player1User}} vs {% if game.player2User %} {{game.player2User}} {% else %} someone? {% endif %} </b> </br>
+{% block content %}
+    <b> {{game.player1User}} vs {% if game.player2User %} {{game.player2User}} {% else %} someone? {% endif %} </b> </br>
     <textarea id="chat-log" cols="100" rows="10">
-{% for m in messages %}
-{{m.author}}: {{m.content}}
-{% endfor %}    
-</textarea><br/>
-{% if game.player1User == user and not game.player1Char %} 
-<form action="" method="post">
-{% csrf_token %}
-{{ charForm }}
-<input type="submit">
-<form action="" method="post">
-{% elif game.player2User == user and not game.player2Char %} 
-<form action="" method="post">
-{% csrf_token %}
-{{ charForm }}
-<input type="submit">
-{% endif %}
-<b>{{game.player1Char}}'s Stats</b></br>
- HP <div id="p1HP">{{game.player1HP}}</div>
- Attack <div id="p1Attack">{{game.player1Attack}}</div>
- Dodge <div id="p1Dodge">{{game.player1Dodge}}</div> 
-<b>{{game.player2Char}}</b> </br> 
- HP <div id="p2HP">{{game.player2HP}}</div> 
- Attack <div id="p2Attack">{{game.player2Attack}}</div> 
- Dodge <div id="p2Dodge">{{game.player2Dodge}}</div> 
-</form></br>
-    <input id="chat-message-input" type="text" size="100"/><br/>
-    <input id="chat-message-submit" type="button" value="Send"/>
-    {% if user == game.player1User or user == game.player2User %}
-    <input id="attack-button" type="button" value="Attack"/>
-    <input id="dodge-button" type="button" value="Dodge"/>
-    <input id="special-button" type="button" value="Special"/>
-    <input id="powerup-button" type="button" value="Power Up"/>
+    {% for m in messages %}
+    {{m.author}}: {{m.content}}
+    {% endfor %}    
+    </textarea><br/>
+    {% if game.player1User == user and not game.player1Char %} 
+    <form action="" method="post">
+    {% csrf_token %}
+    {{ charForm }}
+    <input type="submit">
+    <form action="" method="post">
+    {% elif game.player2User == user and not game.player2Char %} 
+    <form action="" method="post">
+    {% csrf_token %}
+    {{ charForm }}
+    <input type="submit">
     {% endif %}
-    {% if game.player1User == user %}</br> {% elif game.player2User %} </br>{% else %} 
-    <input id="join-button" type="button" value="Join"/>
-    {% endif %}
+    <table><tr>
+    <td>
+        <b>{{game.player1Char}}'s Stats</b></br>
+        HP <div id="p1HP">{{game.player1HP}}</div>
+        Attack <div id="p1Attack">{{game.player1Attack}}</div>
+        Dodge <div id="p1Dodge">{{game.player1Dodge}}</div> 
+    </td><td>
+        <b>{{game.player2Char}}</b> </br> 
+        HP <div id="p2HP">{{game.player2HP}}</div> 
+        Attack <div id="p2Attack">{{game.player2Attack}}</div> 
+        Dodge <div id="p2Dodge">{{game.player2Dodge}}</div> 
+    </td>
+    </tr></table>
+    </form></br>
+        <input id="chat-message-input" type="text" size="100"/><br/>
+        <input id="chat-message-submit" type="button" value="Send"/>
+        {% if user == game.player1User or user == game.player2User %}
+        <input id="attack-button" type="button" value="Attack"/>
+        <input id="dodge-button" type="button" value="Dodge"/>
+        <input id="special-button" type="button" value="Special"/>
+        <input id="powerup-button" type="button" value="Power Up"/>
+        {% endif %}
+        {% if game.player1User == user %}</br> {% elif game.player2User %} </br>{% else %} 
+        <input id="join-button" type="button" value="Join"/>
+        {% endif %}
+    
+{% endblock %}
+
 </body>
 <script>
     var roomName = "{{ room_name|escapejs }}";
@@ -106,7 +115,7 @@
 
         messageInputDom.value = '';
     };
-    {% if user == game.player1User or user == game.player2User %}
+    if("{{user}}" == "{{game.player1User}}" | "{{user}}" == "{{game.player1User}}"){ //{% if user == game.player1User or user == game.player2User %}
     document.querySelector('#attack-button').onclick = function(e) {
         var testerSend = 'Attack';
         chatSocket.send(JSON.stringify({
@@ -139,7 +148,7 @@
             'author': '{{ user }}'
         }));
     };
-    {% endif %}
+    }//{% endif %}
     document.querySelector('#join-button').onclick = function(e) {
         var testerSend = 'Join';
         chatSocket.send(JSON.stringify({
