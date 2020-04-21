@@ -1,6 +1,6 @@
 <!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
-{% extends 'account/game-play.html' %}
+{% include 'account/game-play.html' %}
 <!--{% include 'account/sidenav.html' %}-->
 <html>
 <head>
@@ -115,7 +115,7 @@
 
         messageInputDom.value = '';
     };
-    if("{{user}}" == "{{game.player1User}}" | "{{user}}" == "{{game.player1User}}"){ //{% if user == game.player1User or user == game.player2User %}
+    {% if user == game.player1User or user == game.player2User %}
     document.querySelector('#attack-button').onclick = function(e) {
         var testerSend = 'Attack';
         chatSocket.send(JSON.stringify({
@@ -148,7 +148,7 @@
             'author': '{{ user }}'
         }));
     };
-    }//{% endif %}
+    {% endif %}
     document.querySelector('#join-button').onclick = function(e) {
         var testerSend = 'Join';
         chatSocket.send(JSON.stringify({
