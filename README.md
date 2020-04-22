@@ -1,5 +1,5 @@
 # 307Project
-COMP 307 Final Project
+COMP 307 Final Project - Game Topic
 
 ## Group Members
 Tristan Sigurdsson-Morris 260830362 <br />
