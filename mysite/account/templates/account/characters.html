@@ -14,29 +14,22 @@
         <form action="{% url 'characters' %}" method="post">
             {% csrf_token %}
             <div class="row" style = "width: 50%;">
-            <div class="column">
-                <!--{% for c in characters %}
-                <img src=  alt="Snow" style="width:100%">
-                {% endfor %}-->
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-1.png' %}"><img src= "{% static 'account/bard-drawing-1.png' %}"  alt="S1">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-2.png' %}"><img src= "{% static 'account/bard-drawing-2.png' %}"  alt="S2">
-                
-                    
+                <div class="column">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-1.png' %}"><img src= "{% static 'account/bard-drawing-1.png' %}"  alt="S1">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-2.png' %}"><img src= "{% static 'account/bard-drawing-2.png' %}"  alt="S2">      
+                </div>
+                <div class="column">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-3.png' %}"><img src= "{% static 'account/bard-drawing-3.png' %}"  alt="S3">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-4.png' %}"><img src= "{% static 'account/bard-drawing-4.png' %}"  alt="S4">
+                </div>
+                <div class="column">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-5.png' %}"><img src= "{% static 'account/bard-drawing-5.png' %}"  alt="S5">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-6.png' %}"><img src= "{% static 'account/bard-drawing-6.png' %}"  alt="S6">
+                    <input type="radio" name="choice" value="{% static 'account/bard-drawing-7.png' %}"><img src= "{% static 'account/bard-drawing-7.png' %}"  alt="S7">
+                </div>            
             </div>
-            <div class="column">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-3.png' %}"><img src= "{% static 'account/bard-drawing-3.png' %}"  alt="S3">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-4.png' %}"><img src= "{% static 'account/bard-drawing-4.png' %}"  alt="S4">
-            </div>
-            <div class="column">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-5.png' %}"><img src= "{% static 'account/bard-drawing-5.png' %}"  alt="S5">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-6.png' %}"><img src= "{% static 'account/bard-drawing-6.png' %}"  alt="S6">
-                <input type="radio" name="choice" value="{% static 'account/bard-drawing-7.png' %}"><img src= "{% static 'account/bard-drawing-7.png' %}"  alt="S7">
-            </div>            
-        </div>
-        <input type="submit" value="Choice">
-        <a href="{% url 'logout' %}">Back</a>
-    </form>
+            <input type="submit" value="Choice">
+            <a href="{% url 'logout' %}">Back</a>
+        </form>
     </body>
-    <script>
-    </script>
 </html>

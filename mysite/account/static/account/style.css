@@ -1,3 +1,7 @@
+/*the basics*/
+@import "addon.css";
+@import "button-style.css";
+
 body {
     color: black;
     background-image: url("home.jpg");
@@ -7,9 +11,7 @@ body {
     text-align: center;
 }
 
-a {
-    text-decoration: none;
-}
+a {text-decoration: none;}
 
 table, th, td {
     border: 1px solid black;
@@ -28,20 +30,7 @@ canvas {
     image-rendering: pixelated;
 }
 
-.home-btn {
-    background-color: black;
-    color: white;
-    width: 50%;
-    display: block;
-    padding: 16px 32px;
-    text-align: center;
-    font-size: 24px;
-    padding: 10px;
-    margin-left:auto;
-    margin-right:auto;
-}
-
-.form-at {
+.form-at { /*forms*/
     background-color: white;
     display: block;
     font-size: 20px;
@@ -68,66 +57,3 @@ footer {
     
 }
 
-button {
-    background-color: white;
-    color: black;
-    padding: 8px;
-    text-decoration: none;
-    display: block;
-    border-radius: 25px;
-    transition: 0.5s;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: darkslategray;
-    color: white;
-}
-
-.modal { /*modal background */
-    display: none; 
-    position: fixed;
-    z-index: 1; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4)
-}
-
-.modal-content {
-    background-color: white;
-    opacity: 1;
-    margin: 20% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid gray;
-    width: 60%;
-}
-
-.row::after {
-    clear: both;
-    content: "";
-    display: table;
-  }
-  
-/* Create two equal columns that sits next to each other */
-.column {
-    display:flex;
-    padding: 0 4px;
-    height: 200px;
-    width: auto;
-
-}
-
-.column img {
-    margin-top: 8px;
-    vertical-align: middle;
-    opacity: 0.80;
-    width: 100%;
-    height: auto;
-}
-
-.column img:hover {
-opacity: 1.0;
-}

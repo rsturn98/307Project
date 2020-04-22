@@ -6,12 +6,12 @@
         <title>Chat Room</title>
         <script>
             var image1 = new Image();
-            image1.src = "{{character}}";
+            image1.src = "{{character}}"; //player one
             var image2 = new Image();
             image2.src = "{% static 'account/shadow.png' %}"; //opponent
 
             function draw() 
-            {
+            { //getting images
                 var canvas = document.getElementById("myGame");
                 var context = canvas.getContext("2d")
                 var x_char = 30;
@@ -37,12 +37,7 @@
             
         {% endblock %}
     </div>
-    
-        <!--<script src = "{% static 'account/load_game.js' %}">
-        CR1 = "{% static 'account/bard-drawing-4.png' %}";
-        CR2 = "{% static 'account/bard-drawing-5.png' %}";
-        </script>-->
-    <!--will be useful for animating image https://stackoverflow.com/questions/52438094/how-to-animate-an-image-in-canvas-using-requestanimationframe-->
+    <!--could be useful for animating image https://stackoverflow.com/questions/52438094/how-to-animate-an-image-in-canvas-using-requestanimationframe-->
     <script src = "{% static 'account/load_game.js' %}"></script>
 </body>
 

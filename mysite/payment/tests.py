@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth.models import AnonymousUser, User
 from . import views
 
@@ -11,6 +11,8 @@ class PaymentTestCase(TestCase):
     
     def test_payment(self):
         request = self.factory.get('/pay/')
+        #...
     
     def test_charge(self):
         request = self.factory.get('/pay/charge')
+        #...

@@ -1,0 +1,28 @@
+.home-btn {
+    background-color: black;
+    color: white;
+    width: 50%;
+    display: block;
+    padding: 16px 32px;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+button {
+    background-color: white;
+    color: black;
+    padding: 8px;
+    text-decoration: none;
+    display: block;
+    border-radius: 25px;
+    transition: 0.5s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: darkslategray;
+    color: white;
+}

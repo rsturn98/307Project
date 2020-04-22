@@ -1,0 +1,47 @@
+.modal { /* help button */
+    display: none; 
+    position: fixed;
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4)
+}
+
+.modal-content {
+    background-color: white;
+    opacity: 1;
+    margin: 20% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid gray;
+    width: 60%;
+}
+
+/*formatting characters page*/
+.row::after {
+    clear: both;
+    content: "";
+    display: table;
+  }
+
+.column {
+    display:flex;
+    padding: 0 4px;
+    height: 200px;
+    width: auto;
+
+}
+
+.column img {
+    margin-top: 8px;
+    vertical-align: middle;
+    opacity: 0.80;
+    width: 100%;
+    height: auto;
+}
+
+.column img:hover {
+opacity: 1.0;
+}
