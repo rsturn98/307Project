@@ -21,7 +21,7 @@ class HomePageView(TemplateView):
 def charge(request):
     context = {}
     if request.method == 'POST':
-        filterCharge = list(filter(lambda value: value.description==str(request.user), stripe.Charge.list()))
+        filterCharge = list(filter(lambda value: value.description==str(request.user), stripe.Charge.list(limit=100)))
         if not filterCharge: 
             charge = stripe.Charge.create(
                 amount=500,
@@ -30,7 +30,7 @@ def charge(request):
                 source=request.POST['stripeToken']
             )
             context['check'] = True
-    return render(request, 'payment/charge.html')
+    return render(request, 'payment/charge.html', context)
 
 def account(request):
     return HttpResponseRedirect('/accounts/characters')
