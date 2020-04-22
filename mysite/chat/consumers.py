@@ -29,10 +29,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         name = text_data_json['author']
         action = text_data_json['action']
         room_name = self.room_group_name
-        print(action)
         # let's make a thing to handle each action
         if action == "Chat":
-            print("Chatting")
             update = "No"
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -45,7 +43,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             await game.addChat(self.room_group_name, message, name)
         elif action == "Join":
-            print("Joining")
             await game.joinGame(self.room_group_name, name)
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -58,19 +55,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
             await game.addChat(self.room_group_name, message, name)
         else:
-            print("Something else")
             await game.actionHandler(room_name, action, name)
             checker = [False]
             await game.actionChecker(room_name, checker)
-            print(checker[0])
             turnRecord = [""]
+            #we confirm actions are good, then resolve the turn
             if checker[0]:
-                print("Both Actions Good to Go!")
                 await game.turn(room_name, turnRecord)
-            
+
             gameState = []
             await game.getGame(room_name, gameState)
-            print(gameState)
+            
+            #If we have something to send, we update the game state and then send it 
             if turnRecord[0] != "":
                 await self.channel_layer.group_send(
                     self.room_group_name,
@@ -88,62 +84,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'turnRecord': turnRecord[0]
                     }
                 )
-            if turnRecord[0] != "":
+            #then we add it to the game logs
                 await game.addChat(self.room_group_name, turnRecord[0], "Server")
-#
-#        if action == "Dodge":
-#            print("Dodging")
-#
-#            await game.actionHandler(room_name, action, name)
-#            await self.channel_layer.group_send(
-#                self.room_group_name,
-#                {
-#                    'type': 'dodge',
-#                    'message': message,
-#                    'author': name
-#                }
-#            )
-#            await game.addChat(self.room_group_name, message, name)
-#
-#        if action == "Special":
-#            print("Special")
-#
-#            await game.actionHandler(room_name, action, name)
-#            await self.channel_layer.group_send(
-#                self.room_group_name,
-#                {
-#                    'type': 'special',
-#                    'message': message,
-#                    'author': name
-#                }
-#            )
-#            await game.addChat(self.room_group_name, message, name)
-#        if action == "Power":
-#            print("Powering Up")
-#
-#            await game.actionHandler(room_name, action, name)
-#            await self.channel_layer.group_send(
-#                self.room_group_name,
-#                {
-#                    'type': 'powerup',
-#                    'message': message,
-#                    'author': name
-#                }
-#            )
-#            await game.addChat(self.room_group_name, message, name)
-#        
-#        if action == "Join":
-#            print("Joining")
-#            await game.joinGame(self.room_group_name, name)
-#            await self.channel_layer.group_send(
-#                self.room_group_name,
-#                {
-#                    'type': 'join',
-#                    'message': message,
-#                    'author': name
-#                }
-#            )
-#            await game.addChat(self.room_group_name, message, name)
     # Receive message from room group
     async def chat_message(self, event):
         message = event['message']
@@ -156,7 +98,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def attack(self, event):
-        message = ""
+        message = event['turnRecord']
         author = "Server"
         update = event['update']
         p1HP = event['p1HP']
@@ -179,35 +121,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'p2Attack':p2Attack,
             'p2Dodge':p2Dodge,
             'turnRecord': turnRecord
-        }))
-    async def dodge(self, event):
-        message = event['message']
-        author = event['author']
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'action': 'Dodge'
-        }))
-    
-    async def special(self, event):
-        message = event['message']
-        author = event['author']
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'action': 'Special'
-        }))
-    
-    async def powerup(self, event):
-        message = event['message']
-        author = event['author']
-        # Send message to WebSocket
-        await self.send(text_data=json.dumps({
-            'message': message,
-            'author': author,
-            'action': 'Powerup'
         }))
     
     async def join(self, event):

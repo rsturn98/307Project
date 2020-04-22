@@ -19,33 +19,32 @@ def index(request):
 def room(request, room_name):
     name = str(request.user.get_username())
     if request.method == 'POST':
+        #character selection
         char_name = request.POST.get('char_name')
         if char_name in characters.nameList():
             gameObject = models.Game.objects.get(gameRoom=room_name)
-            if name == gameObject.player1User:
+            if name == gameObject.player1User and not gameObject.player1Char:
                 gameObject.player1Char = char_name
                 character = characters.get(char_name)
                 gameObject.player1HP = character.HP
                 gameObject.player1Attack = character.Attack
                 gameObject.player1Dodge = character.Dodge
 
-            elif name == gameObject.player2User:
+            elif name == gameObject.player2User and not gameObject.player2Char:
                 gameObject.player2Char = char_name
                 character = characters.get(char_name)
                 gameObject.player2HP = character.HP
                 gameObject.player2Attack = character.Attack
                 gameObject.player2Dodge = character.Dodge
             gameObject.save()
-        else:
-            print("form not valid I guess")
     if not room_name.isalnum():
-        #return render(request,'chat/error.html', {})
-        #return redirect(request.META['HTTP_REFERER'])
+        #error if the name is wrong
         return render(request,'chat/index.html',{'error': True})
     if len(room_name)<1:
         request.path += '-'
         return render(request,'chat/index.html',{'error': True})
     if not (models.Rooms.objects.filter(roomname=room_name).exists()):
+        #create new room if it doesn't exist
         newroom = models.Rooms(roomname=room_name)
         newroom.save()
         roomObject = models.Rooms.objects.get(roomname=room_name)

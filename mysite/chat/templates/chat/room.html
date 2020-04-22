@@ -11,10 +11,10 @@
     {% block content %}
     <b> {{game.player1User}} vs {% if game.player2User %} {{game.player2User}} {% else %} someone? {% endif %} </b> </br>
     <textarea id="chat-log" cols="100" rows="10">
-    {% for m in messages %}
+{% for m in messages %}
     {{m.author}}: {{m.content}}
-    {% endfor %}    
-    </textarea><br/>
+{% endfor %}
+</textarea><br/>
     {% if game.player1User == user and not game.player1Char %} 
     <form action="" method="post">
     {% csrf_token %}
@@ -34,7 +34,7 @@
         Attack <div id="p1Attack">{{game.player1Attack}}</div>
         Dodge <div id="p1Dodge">{{game.player1Dodge}}</div> 
     </td><td>
-        <b>{{game.player2Char}}</b> </br> 
+        <b>{{game.player2Char}}'s Stats</b> </br> 
         HP <div id="p2HP">{{game.player2HP}}</div> 
         Attack <div id="p2Attack">{{game.player2Attack}}</div> 
         Dodge <div id="p2Dodge">{{game.player2Dodge}}</div> 
@@ -78,11 +78,12 @@
         var p2Dodge = data['p2Dodge'];
         console.log(data);
 
-        document.querySelector('#chat-log').value += (author+': '+message + '\n\n');
+        document.querySelector('#chat-log').value += ("    "+author+': '+message + '\n\n');
         
         textarea.scrollTop = textarea.scrollHeight;
         console.log(update);
         if (update == "Yes"){
+	    unlockControls();
             console.log("Updating game state");
             document.getElementById('p1HP').innerHTML = p1HP;
             document.getElementById('p1Attack').innerHTML = p1Attack;
@@ -117,6 +118,7 @@
     };
     {% if user == game.player1User or user == game.player2User %}
     document.querySelector('#attack-button').onclick = function(e) {
+	lockControls()
         var testerSend = 'Attack';
         chatSocket.send(JSON.stringify({
             'message': '{{ user }} attacked!',
@@ -125,6 +127,7 @@
         }));
     };
     document.querySelector('#dodge-button').onclick = function(e) {
+	lockControls()
         var testerSend = 'Dodge';
         chatSocket.send(JSON.stringify({
             'message': '{{ user }} dodged!',
@@ -133,6 +136,7 @@
         }));
     };
     document.querySelector('#special-button').onclick = function(e) {
+	lockControls()
         var testerSend = 'Special';
         chatSocket.send(JSON.stringify({
             'message': '{{ user }} used a special attack!',
@@ -141,6 +145,7 @@
         }));
     };
     document.querySelector('#powerup-button').onclick = function(e) {
+	lockControls()
         var testerSend = 'Power';
         chatSocket.send(JSON.stringify({
             'message': '{{ user }} powered up!',
@@ -158,5 +163,18 @@
         }));
 	location.reload();
     };
+    
+    function lockControls(){
+	   document.getElementById("attack-button").disabled = true;
+	   document.getElementById("dodge-button").disabled = true;
+	   document.getElementById("powerup-button").disabled = true;
+	   document.getElementById("special-button").disabled = true;
+    }   
+    function unlockControls(){
+	   document.getElementById("attack-button").disabled = false;
+	   document.getElementById("dodge-button").disabled = false;
+	   document.getElementById("powerup-button").disabled = false;
+	   document.getElementById("special-button").disabled = false;
+    }   
 </script>
 </html>

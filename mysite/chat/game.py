@@ -31,7 +31,6 @@ def getGame(room_name, gameState):
     gameState.append(gameObject.player2HP)
     gameState.append(gameObject.player2Attack)
     gameState.append(gameObject.player2Dodge)
-    #print(gameState)
 
 @database_sync_to_async
 def actionHandler(room_name, action, name):
@@ -45,20 +44,16 @@ def actionHandler(room_name, action, name):
 
 @database_sync_to_async
 def actionChecker(room_name, checker):
-    print("we are checking")
     #Check if both actions have been assigned, return t/f
     gameObject = models.Game.objects.get(gameRoom=room_name)
-    print(gameObject.player1Action, gameObject.player2Action)
     if gameObject.player1Action != None and gameObject.player2Action != None:
         checker[0] = True
-        print("Actions good")
         return
-    print("actions not good")
     checker[0] = False
     return
 
 def checkWin(gameObject):
-    print(gameObject.player1HP, gameObject.player2HP)
+    #see if someone lost, assign winner
     if gameObject.player1HP <= 0 or gameObject.player2HP <= 0:
         gameObject.gameOver = True
         if gameObject.player1HP <= 0:
@@ -82,6 +77,7 @@ def special(player1,char1,player2,char2,turnRecord):
         turnRecord[0] = turnRecord[0] + "%s locks onto target!\n"%(char1.Name)
 
 def saveGame(player1,player2,gameObject):
+    #save the game state, should happen every time it changes
     if player1.Name == gameObject.player1User:
         gameObject.player1HP = player1.HP
         gameObject.player1Attack = player1.Attack
@@ -99,18 +95,13 @@ def saveGame(player1,player2,gameObject):
         gameObject.player2Attack = player1.Attack
         gameObject.player2Dodge = player1.Dodge
     gameObject.save()
-    #print(gameObject)
 
 
 def resolve(player1, act1, player2, act2, char1, char2, gameObject):
     #just apply to game in order act1 and act2 based on the character stats
-    #ok now change the gamestate so this works
-    #let's just add more shit to the model, why not
-    #yeah it's gross
-    print("do we get to resolve?")
+    #it's a bit messy but oh well
     turnRecord = [""]
     
-    print(checkWin(gameObject))
     if checkWin(gameObject)==True:
         turnRecord = "The game is over!"
         return turnRecord
@@ -133,7 +124,6 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
     elif act1 == "Power":
         player1.Attack = char1.Attack*2
         turnRecord[0] = turnRecord[0]+"%s readies to strike!\n"%(char1.Name)
-        print(player1.Attack)
         saveGame(player1,player2,gameObject)
     elif act1 == "Special":
         a = 1 #aka do nothing yet
@@ -164,46 +154,35 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
         turnRecord[0] = turnRecord[0]+"%s readies to strike!\n"%(char2.Name)
         saveGame(player1,player2,gameObject)
     elif act2 == "Special":
-        a = 1 #aka do nothing yet
         special(player2,char2,player1,char1,turnRecord)
         saveGame(player1,player2,gameObject)
         if checkWin(gameObject):
             turnRecord[0] = turnRecord[0] + "And the game is over!"
             return turnRecord[0]
-    print(gameObject.player1Action, gameObject.player2Action)
+    #reset actions
     gameObject.player1Action = None
     gameObject.player2Action = None
     gameObject.save()
-    print(gameObject.player1Action, gameObject.player2Action)
-    print(turnRecord[0])
     saveGame(player1,player2,gameObject)
     return turnRecord[0]
 
 
 @database_sync_to_async
 def turn(room_name,turnRecord):
-    #apply the actions, based on the characters, then set the current actions to null so we can do the next turn
-    #-2: normal moves, resolved in order of character speed
-    #we should also record the turn so we can send it to the game and have it play out in the right order in the browser
-    #priority moves removed because I'm lazy. Now dodging etc will just apply to your next turn
-    print("trying a turn")
-
+    #we get set up to resolve a turn, grab all the relevant stats and game info
     #get game object
     gameObject = models.Game.objects.get(gameRoom=room_name)
     char1 = characters.get(gameObject.player1Char)
-    print(char1)
     char2 = characters.get(gameObject.player2Char)
     act1 = gameObject.player1Action
     act2 = gameObject.player2Action
 
     #we check speed, then resolve with either player1 or player 2 going first
     if char1.Speed >= char2.Speed:
-        print("P1 goes first")
         player1 = Player(gameObject.player1User,gameObject.player1HP, gameObject.player1Attack, gameObject.player1Dodge)        
         player2 = Player(gameObject.player2User,gameObject.player2HP, gameObject.player2Attack, gameObject.player2Dodge)
         turnRecord[0]=resolve(player1, act1, player2, act2, char1, char2, gameObject)
     else:
-        print("P2 goes first")
         player1 = Player(gameObject.player2User,gameObject.player2HP, gameObject.player2Attack, gameObject.player2Dodge)        
         player2 = Player(gameObject.player1User,gameObject.player1HP, gameObject.player1Attack, gameObject.player1Dodge)
         turnRecord[0]=resolve(player1, act2, player2, act1, char2, char1, gameObject)
