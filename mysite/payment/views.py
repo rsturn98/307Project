@@ -17,15 +17,19 @@ class HomePageView(TemplateView):
         return context
 
 # Create your views here.
-@login_required
+@login_required(login_url="/login")
 def charge(request):
+    context = {}
     if request.method == 'POST':
-        charge = stripe.Charge.create(
-            amount=500,
-            currency='usd',
-            description= str(request.user),
-            source=request.POST['stripeToken']
-        )
+        filterCharge = list(filter(lambda value: value.description==str(request.user), stripe.Charge.list()))
+        if not filterCharge: 
+            charge = stripe.Charge.create(
+                amount=500,
+                currency='usd',
+                description= str(request.user),
+                source=request.POST['stripeToken']
+            )
+            context['check'] = True
     return render(request, 'payment/charge.html')
 
 def account(request):

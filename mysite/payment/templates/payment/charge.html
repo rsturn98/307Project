@@ -1,6 +1,12 @@
 {% extends "payment/home.html" %}
 
 {% block content %}
+{% if check %}
 <h2>Thank you for your payment! Enjoy your gaming account!</h2>
+{% else %}
+<h2>Oops, our mistake! You've already paid! No charge was made to your account.</h2>
+{% endif %}
 <a href="{% url 'complete' %}">Next</a>
+
+
 {% endblock %}
