@@ -10,9 +10,6 @@ from django.db import IntegrityError
 from . import forms
 import os
 from django.conf import settings
-from django.templatetags.static import static
-from django.contrib.staticfiles.utils import get_files
-from django.contrib.staticfiles.storage import StaticFilesStorage
 from chat import models as chatModels
 # Create your views here.
 def index(request):
