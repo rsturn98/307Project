@@ -13,6 +13,9 @@ def validate_username(value):
         )
 
 
+# Validator to check length and contents of passwords
+
+
 def validate_password(value):
     if not len(value) >= 5:
         raise ValidationError(
