@@ -60,9 +60,9 @@ def checkWin(gameObject):
     if gameObject.player1HP <= 0 or gameObject.player2HP <= 0:
         gameObject.gameOver = True
         if gameObject.player1HP <= 0:
-            gameObject.winner = gameObject.player1User
-        else:
             gameObject.winner = gameObject.player2User
+        else:
+            gameObject.winner = gameObject.player1User
         gameObject.save()
         return True
     return False
