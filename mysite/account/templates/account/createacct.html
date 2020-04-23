@@ -1,31 +1,41 @@
-<!DOCTYPE html>
-{% load static %}
-<!--create account-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
-        <title>Mental Combat</title>
-    </head>
+{% extends "base.html" %}
+{% block content %}
+<!-- CREATE ACCOUNT -->
 
-    <body>
-        <h1>Create Account</h1>
-        <section class="form-at">
-            <form action="" method="post">
-                {% csrf_token %}
-                Username:
-                <input type="text" name="username" value="{{form.data.username}}" /> <br>
-                {{ form.username.errors }}
-                Password: 
-                <input type="password" name="password" /> <br>
-                {{ form.password.errors }}
-                Confirm Password: 
-                <input type="password" name="password_confirm" /> <br>
-                {{ form.password_confirm.errors }}
+    <section class="form-at">
+
+        <h1 class="text-center">Create Account</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" value="{{form.data.username}}">
+                <small class="form-text text-muted">{{ form.username.errors }}</small>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="******">
+                <small class="form-text text-muted">{{ form.password.errors }}</small>
+            </div>
+
+            <!-- Confirm password -->
+            <div class="form-group">
+                <label for="password_confirm">Confirm Password</label>
+                <input type="password" class="form-control" name="password_confirm" id="password_confirm" placeholder="******">
+                <small class="form-text text-muted">{{ form.password_confirm.errors }}</small>
+            </div>
+
+            <div class="text-center">
                 <input type="submit" value="Create"/>
-            </form>
-            <a href="{% url 'index' %}">Back</a>
-        </section>
-    </body>
-</html>
+                <a href="{% url 'index' %}">Back</a>
+            </div>
+
+        </form>
+    </section>
+
+{% endblock %}

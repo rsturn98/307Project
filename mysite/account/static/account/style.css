@@ -1,59 +1,67 @@
 /*the basics*/
-@import "addon.css";
-@import "button-style.css";
+@import 'addon.css';
+@import 'button-style.css';
 
 body {
-    color: black;
-    background-image: url("home.jpg");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    text-align: center;
+  color: black;
+  background-image: url('home.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  text-align: center;
+  padding: 20px 10px;
 }
 
-a {text-decoration: none;}
-
-table, th, td {
-    border: 1px solid black;
-    padding: 4px;
-    margin-left:auto;
-    margin-right:auto;
+a {
+  text-decoration: none;
 }
 
-canvas { 
-    width: 90%; 
-    height: 70%; 
-    background-image: url('background.jpg');
-    background-size: 100% 100%;
-    background-repeat: no-repeat; 
-    background-attachment:scroll; 
-    image-rendering: pixelated;
+table,
+th,
+td {
+  font-size: 12px;
+  border: 1px solid black;
+  padding: 4px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.form-at { /*forms*/
-    background-color: white;
-    display: block;
-    font-size: 20px;
-    padding: 10px;
-    margin: auto;
-    width: 50%;
-    border: 3px solid green;
-    border-radius: 25px;
+canvas {
+  width: 90%;
+  height: 70%;
+  background-image: url('background.jpg');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  image-rendering: pixelated;
+}
+
+.form-at {
+  /*forms*/
+  background-color: white;
+  display: block;
+  font-size: 20px;
+  padding: 10px;
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  border-radius: 25px;
 }
 
 footer {
-    position:fixed;
-    bottom: 0;
-    color: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  color: white;
 }
 
 .sidenav {
-    top: 0;
-    right: 0;
-    z-index: 1;
-    position: fixed;
-    font-size: 16px;
-    text-align: center;
-    
+  top: 0;
+  right: 0;
+  z-index: 1;
+  position: fixed;
+  font-size: 16px;
+  text-align: center;
 }
-

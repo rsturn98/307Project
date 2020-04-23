@@ -1,6 +1,10 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from . import models, game
+
+# Consumer for Websocket used for battle
+
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -59,14 +63,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
             checker = [False]
             await game.actionChecker(room_name, checker)
             turnRecord = [""]
-            #we confirm actions are good, then resolve the turn
+            # we confirm actions are good, then resolve the turn
             if checker[0]:
                 await game.turn(room_name, turnRecord)
 
             gameState = []
             await game.getGame(room_name, gameState)
-            
-            #If we have something to send, we update the game state and then send it 
+
+            # If we have something to send, we update the game state and then send it
             if turnRecord[0] != "":
                 await self.channel_layer.group_send(
                     self.room_group_name,
@@ -75,18 +79,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'message': message,
                         'author': name,
                         'update': 'Yes',
-                        'p1HP':gameState[0],
-                        'p1Attack':gameState[1],
-                        'p1Dodge':gameState[2],
-                        'p2HP':gameState[3],
-                        'p2Attack':gameState[4],
-                        'p2Dodge':gameState[5],
+                        'p1HP': gameState[0],
+                        'p1Attack': gameState[1],
+                        'p1Dodge': gameState[2],
+                        'p2HP': gameState[3],
+                        'p2Attack': gameState[4],
+                        'p2Dodge': gameState[5],
                         'turnRecord': turnRecord[0]
                     }
                 )
-            #then we add it to the game logs
+            # then we add it to the game logs
                 await game.addChat(self.room_group_name, turnRecord[0], "Server")
     # Receive message from room group
+
     async def chat_message(self, event):
         message = event['message']
         author = event['author']
@@ -96,7 +101,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'author': author,
             'action': 'Chat'
         }))
-    
+
     async def attack(self, event):
         message = event['turnRecord']
         author = "Server"
@@ -114,15 +119,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'author': author,
             'action': 'Update',
             'update': 'Yes',
-            'p1HP':p1HP,
-            'p1Attack':p1Attack,
-            'p1Dodge':p1Dodge,
-            'p2HP':p2HP,
-            'p2Attack':p2Attack,
-            'p2Dodge':p2Dodge,
+            'p1HP': p1HP,
+            'p1Attack': p1Attack,
+            'p1Dodge': p1Dodge,
+            'p2HP': p2HP,
+            'p2Attack': p2Attack,
+            'p2Dodge': p2Dodge,
             'turnRecord': turnRecord
         }))
-    
+
     async def join(self, event):
         message = event['message']
         author = event['author']
@@ -132,4 +137,3 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'author': author,
             'action': 'Join'
         }))
-    

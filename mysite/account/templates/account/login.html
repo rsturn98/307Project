@@ -1,29 +1,36 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-<!--login-->
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
-        <title>Mental Combat</title>
-    </head>
+{% extends "base.html" %}
+{% block content %}
+<!-- LOG IN -->
 
-    <body>
-        <h1>Sign In</h1>
-        {{ form.non_field_errors }}
-        <section class="form-at">
-            <form action="" method="post">
-                {% csrf_token %}
-                Username:
-                <input type="text" name="username"> 
-                {{ form.username.errors }} <br>
-                Password: 
-                <input type="password" name="password" />
-                {{ form.password.errors }} <br>
+    <section class="form-at">
+
+        <h1 class="text-center">Sign In</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" value="{{form.data.username}}">
+                <small class="form-text text-muted">{{ form.username.errors }}</small>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="******">
+                <small class="form-text text-muted">{{ form.password.errors }}</small>
+            </div>
+            
+            <!-- Errors -->
+            <small>{{ form.non_field_errors }}</small>
+
+            <div class="text-center">
                 <input type="submit" value="Login"/>
-            </form>
-            <a href="{% url 'index' %}">Back</a>
-        </section>
-    </body>
-</html>
+                <a href="{% url 'index' %}">Back</a>
+            </div>
+        </form>
+    </section>
+
+{% endblock %}

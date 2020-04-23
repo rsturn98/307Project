@@ -1,26 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
 {% include "account/sidenav.html" %}
-<body>
-    <h1>Game History<h1>
-    <table>
-        <tr>
-            <th>Date</th>
-            <th>Opponent</th>
-            <th>Winner</th>
-        </tr>
-        {% for b in battles %} 
-        {% if b.player1User == user and b.player2User %}
-        <tr>
-            <td>{{b.date}}</td>
-            <td>{{b.player2User}}</td>
-            <td>{% if b.winner %}{{b.winner}}{% else %}Still to be determined{% endif %}</td>
-        </tr>
-        {% elif b.player2User == user and b.player1User %}
-        <tr>
-            <td>{{b.date}}</td>
-            <td>{{b.player1User}}</td>
-            <td>{% if b.winner %}{{b.winner}}{% else %}Still to be determined{% endif %}</td>
-        </tr>
-        {% endif %}
-        {% endfor %}
-    </table>
-</body>
+<!-- MATCH HISTORY -->
+
+        <h1 class="text-center">Game History<h1>
+        <table class="table table-dark">
+        <!-- Headers -->
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Room</th>
+                    <th>Opponent</th>
+                    <th>Winner</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in battles %} 
+                {% if b.player1User == user or b.player2User == user %}
+                <tr>
+                    <!-- Date -->
+                    <td>{{b.date}}</td>
+                    <!-- Link to room -->
+                    <td><a href="chat/{{b.gameRoom.roomname}}/">{{b.gameRoom.roomname}}</a></td>
+                    <!-- Opponent's username -->
+                    <td>
+                        {% if b.player1User == user %}
+                            {% if b.player2User %}
+                                {{b.player2User}}
+                            {% else %}
+                                <div class="text-muted">Awaiting Challenger</div>
+                            {% endif %}
+                        {% else %}
+                            {{b.player1User}}
+                        {% endif %}
+                    </td>
+                    <!-- Color-code wins/losses -->
+                    <td>
+                        {% if b.winner %}
+                            {% if b.winner == user %}
+                                <div class="text-success">{{b.winner}}</div>
+                            {% else %}
+                                <div class="text-danger">{{b.winner}}</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-muted">In Progress...</div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    
+{% endblock %}

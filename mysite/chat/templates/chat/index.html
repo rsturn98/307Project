@@ -1,39 +1,64 @@
-<!-- chat/templates/chat/index.html -->
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block content %}
 {% load static %}
-{% include 'account/sidenav.html' %}
-<html>
-<head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
-    <link href = "{% static 'chat/style.css' %}" rel = "stylesheet">
-</head>
-<body>
-    <h2>Enter an existing match or start a new one<h2></h2><br/>
-    <button type="button" class="collapsible">Completed Games</button>
+<!-- Stylesheet for this app -->
+<link href = "{% static '/chat/style.css' %}" rel = "stylesheet">
+
+    <div class="row"><div class="col-sm">
+        <h2 class="text-center">Enter an existing match or start a new one</h2>
+    </div></div>
+
+    <!-- Collapsible list of completed games -->
+    <div class="row"><div class="col-sm">
+        <button type="button" class="collapsible">Completed Games</button>
         <div class="content">
-    {% for room in rooms %}{% if room.winner %}
-    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} vs {{room.player2User}} </br>{% endif %}
-    {% endfor %}
+            {% for room in rooms %}{% if room.winner %}
+                <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: <strong>{{room.player1User}}</strong> vs <strong>{{room.player2User}}</strong>
+                </br>
+            {% endif %}{% endfor %}
         </div>
-    <button type="button" class="collapsible">In Progress Games</button>
+    </div></div>
+
+    <!-- Collapsible list of in progress games -->
+    <div class="row"><div class="col-sm">
+        <button type="button" class="collapsible">In Progress Games</button>
         <div class="content">
-    {% for room in rooms %}{% if not room.winner and room.player2User %}
-    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} vs {{room.player2User}} </br>{% endif %} 
-    {% endfor %}
+            {% for room in rooms %}{% if not room.winner and room.player2User %}
+                <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: <strong>{{room.player1User}}</strong> vs <strong>{{room.player2User}}</strong>
+                </br>
+            {% endif %}{% endfor %}
         </div>
-    <button type="button" class="collapsible">Looking for Challenger</button>
+    </div></div>
+    
+    <!-- Collapsible list of looking for challenger games -->
+    <div class="row"><div class="col-sm">
+        <button type="button" class="collapsible">Looking For Challenger</button>
         <div class="content">
-    {% for room in rooms %}{% if not room.player2User %}
-    <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: {{room.player1User}} Awaiting Challenger! </br>{% endif %} 
-    {% endfor %}
+            {% for room in rooms %}{% if not room.player2User %}
+                <a href="{{ request.build_absolute_uri }}{{room.gameRoom.roomname}}/">{{room.gameRoom.roomname}}</a>: <strong>{{room.player1User}}</strong> awaits a challenger!
+                </br>
+            {% endif %}{% endfor %}
         </div>
-    <input id="room-name-input" type="text" size="100"/><br/>
-    <input id="room-name-submit" type="button" value="Create New Game"/>
-{% if error %}
-	<b>Error: Room names must be alphanumeric (no special characters or whitespace)</b>
-{% endif %}
+    </div></div>
+    <br>
+
+    <!-- Create new room input/button group -->
+    <div class="row"><div class="col-sm">
+        <div class="card">
+            <div class="input-group">
+                <input id="room-name-input" type="text" class="form-control" placeholder="Room name" >
+                <div class="input-group-append">
+                    <input id="room-name-submit" class="btn btn-outline-secondary" type="button" value="Create New Game"/>
+                </div>
+            </div>
+            {% if error %}
+                <small class="text-danger">Error: Room names must be alphanumeric (no special characters or whitespace)</small>
+            {% endif %}
+        </div>
+    </div></div>
+
     <script>
+        // Submit message on enter key
         document.querySelector('#room-name-input').focus();
         document.querySelector('#room-name-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
@@ -41,25 +66,26 @@
             }
         };
 
+        // Log message on submit
         document.querySelector('#room-name-submit').onclick = function(e) {
             var roomName = document.querySelector('#room-name-input').value;
             window.location.pathname = '/chat/' + roomName + '/';
         };
 
-var coll = document.getElementsByClassName("collapsible");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.display === "block") {
-      content.style.display = "none";
-    } else {
-      content.style.display = "block";
-    }
-  });
-}
+        // Make elements collapsible
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
     </script>
-</body>
-</html>
+
+{% endblock %}

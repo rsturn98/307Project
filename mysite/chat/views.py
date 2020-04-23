@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from . import models, forms, characters
 # Create your views here.
 
+
 @login_required(redirect_field_name='')
 def index(request):
     roomList = models.Game.objects.all()
@@ -12,14 +13,15 @@ def index(request):
         if form.is_valid():
             form.save()
     return render(request, 'chat/index.html', {'error': False,
-        'rooms': roomList
-        })
+                                               'rooms': roomList
+                                               })
+
 
 @login_required(redirect_field_name='')
 def room(request, room_name):
     name = str(request.user.get_username())
     if request.method == 'POST':
-        #character selection
+        # character selection
         char_name = request.POST.get('char_name')
         if char_name in characters.nameList():
             gameObject = models.Game.objects.get(gameRoom=room_name)
@@ -38,13 +40,13 @@ def room(request, room_name):
                 gameObject.player2Dodge = character.Dodge
             gameObject.save()
     if not room_name.isalnum():
-        #error if the name is wrong
-        return render(request,'chat/index.html',{'error': True})
-    if len(room_name)<1:
+        # error if the name is wrong
+        return render(request, 'chat/index.html', {'error': True})
+    if len(room_name) < 1:
         request.path += '-'
-        return render(request,'chat/index.html',{'error': True})
+        return render(request, 'chat/index.html', {'error': True})
     if not (models.Rooms.objects.filter(roomname=room_name).exists()):
-        #create new room if it doesn't exist
+        # create new room if it doesn't exist
         newroom = models.Rooms(roomname=room_name)
         newroom.save()
         roomObject = models.Rooms.objects.get(roomname=room_name)
@@ -58,4 +60,4 @@ def room(request, room_name):
         'game': models.Game.objects.get(gameRoom=room_name),
         'charForm': charForm,
         'character': request.session['character']
-        })
+    })

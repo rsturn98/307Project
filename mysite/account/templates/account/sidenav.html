@@ -1,53 +1,49 @@
-<!DOCTYPE html>
-{% load static %}
-<html>
-<!--link for doing views/templates: https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Home_page -->
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href = "{% static 'account/style.css' %}" rel = "stylesheet">
-        <title>Mental Combat</title>
-    </head>
+{% extends "base.html" %}
+{% block content %}
+<!-- SIDE NAVIGATION MENU -->
 
-    <body>
-        <div id="mySidenav" class="sidenav">
-            <a href="{% url 'player-main' %}"><button >Home</button></a>
-            <a href="{% url 'logout' %}"><button>Logout</button></a>
-            <button id="help-btn">Help</button>
-        </div>
+    <!-- Buttons -->
+    <div id="mySidenav" class="sidenav">
+        <a href="{% url 'player-main' %}" style="text-decoration:none;"><button >Home</button></a><br/>
+        <a href="{% url 'logout' %}" style="text-decoration:none;"><button>Logout</button></a><br/>
+        <button id="help-btn" style="text-decoration:none;">Help</button>
+    </div>
 
-        <div id="Modal" class="modal">
-            <div id="Help" class="modal-content">
-                <p>
-                    Here are some quick instructions on how this game works...<br />
-                    You are a telepath fighter going into combat to protect your powers!
-                    Your avatar can draw powers from three possible sources before you face off with another mysterious telepath.
-                    Start or join games to test your strength in battle. (you can also look back on your past victories and defeats) <br />
-                    <b>Play!</b>
-                    Click the button associated with the action you want to take. 
-                    Once both players have sent their actions, the game server will resolve the turn and send to each client the adjusted game state as well as posting a description of the turn in the game chat.
-                    When one player gets to 0 or less HP remaining, the game will end and set the winning player, visible in each player's game history. 
-                    The game will now be shown in the "Completed" dropdown.
-
+    <!-- Help modal -->
+    <div id="Modal" class="modal">
+        <div id="Help" class="modal-content">
+                <h4>Quick instructions on how this game works...</h4>
+                <p class="text-dark">
+                    You are a telepath fighter going into combat to protect your powers! Your avatar can draw powers from three possible sources before you face off with another mysterious telepath. Start or join games to test your strength in battle (you can also look back on your past victories and defeats).
                 </p>
-            </div>
-        </div>
-    </body>
+                <strong>How To Play:</strong>
+                <ul class="text-left">
+                <li>Click the button associated with the action you want to take.</li>
+                <li>Once both players have sent their actions, the game server will resolve the turn and send to each client the adjusted game state as well as posting a description of the turn in the game chat.</li>
+                <li>When one player gets to 0 or less HP remaining, the game will end and set the winning player, visible in each player's game history. </li>
+                <li>The game will now be shown in the "Completed" dropdown.</li>
+                </ul>
 
+        </div>
+    </div>
+    
     <script>
         var modal = document.getElementById("Modal");
         var btn = document.getElementById("help-btn");
 
-        //open modal when click button
+        // Open modal when click button
         btn.onclick = function() {
             modal.style.display = "block";
         }
 
-        //click outside modal closes it
+        // Click outside modal closes it
         window.onclick = function(event) {
             if (event.target == modal) {
                 modal.style.display = "none";
             }
         }
     </script>
-</html>
+
+{% endblock %}
+
+<!-- NOTE: please excuse the in-line CSS. It needed priority over Bootstrap's styling-->

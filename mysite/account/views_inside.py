@@ -1,4 +1,4 @@
-##EVERYTHING ONCE YOU'VE LOGGED IN
+# EVERYTHING ONCE YOU'VE LOGGED IN
 from django.shortcuts import render
 import stripe
 from django.contrib.auth.models import User
@@ -13,7 +13,7 @@ import os
 from django.conf import settings
 from chat import models as chatModels
 
-#GAME-PLAY CANVAS
+# GAME-PLAY CANVAS
 @login_required
 def play(request):
     filterChar = Character.objects.filter(user=request.user)
@@ -21,31 +21,31 @@ def play(request):
     context = {'character': myChar.image_url}
     return render(request, "account/game-play.html", context)
 
-#GO TO GAME
+# GO TO GAME
 @login_required
 def chat(request):
     return HttpResponseRedirect('/chat/')
 
-#GAME-HISTORY
+# GAME-HISTORY
 @login_required
 def history(request):
     name = str(request.user.get_username())
-    gameList = roomList = chatModels.Game.objects.all()
-    context = {'battles': gameList, 
-               'user':name} #EDIT -- needs to used database
+    gameList = chatModels.Game.objects.all()
+    context = {'battles': gameList,
+               'user': name}  # EDIT -- needs to used database
     return render(request, "account/game-history.html", context)
 
-#LIST CHARACTERS CHOICES
+# LIST CHARACTERS CHOICES
 @login_required
 def list_characters(request):
     context = {}
-    filterChar = Character.objects.filter(user=request.user) 
-    if not filterChar: #only set avatar once
+    filterChar = Character.objects.filter(user=request.user)
+    if not filterChar:  # only set avatar once
         if request.method == 'POST':
             if 'choice' in request.POST:
                 c = Character(
-                    user = request.user,
-                    image_url = request.POST['choice']
+                    user=request.user,
+                    image_url=request.POST['choice']
                 )
                 c.save()
                 request.session['character'] = c.image_url
@@ -56,8 +56,10 @@ def list_characters(request):
     request.session['character'] = myChar.image_url
     return HttpResponseRedirect(reverse('player-main'))
 
-#MAIN SCREEN FOR PLAYERS
+# MAIN SCREEN FOR PLAYERS
 @login_required
 def player_main(request):
-    context = {'user':request.user.username}
+    character = Character.objects.filter(user=request.user)[0].image_url
+    context = {'user': request.user.username,
+               'character': character}
     return render(request, 'account/player-main.html', context)
