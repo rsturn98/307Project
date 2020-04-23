@@ -2,6 +2,8 @@ from . import models, characters
 from channels.db import database_sync_to_async
 import random
 
+# Defines a temporary player to store stats for this match
+
 
 class Player:
     def __init__(self, Name, HP, Attack, Dodge):
@@ -13,7 +15,7 @@ class Player:
 
 @database_sync_to_async
 def addChat(room_name, message, name):
-    # store message in model
+    # Store message in model
     roomObject = models.Rooms.objects.get(roomname=room_name)
     store = models.ChatMessage(room=roomObject, content=message, author=name)
     store.save()
@@ -33,7 +35,7 @@ def getGame(room_name, gameState):
 
 @database_sync_to_async
 def actionHandler(room_name, action, name):
-    # take an action, apply it to the game associated with the room
+    # Take an action, apply it to the game associated with the room
     gameObject = models.Game.objects.get(gameRoom=room_name)
     if name == gameObject.player1User and not gameObject.player1Action:
         gameObject.player1Action = action
@@ -54,7 +56,7 @@ def actionChecker(room_name, checker):
 
 
 def checkWin(gameObject):
-    # see if someone lost, assign winner
+    # Check if someone lost, assign winner
     if gameObject.player1HP <= 0 or gameObject.player2HP <= 0:
         gameObject.gameOver = True
         if gameObject.player1HP <= 0:
@@ -67,7 +69,7 @@ def checkWin(gameObject):
 
 
 def special(player1, char1, player2, char2, turnRecord):
-    # define a special attack for each character
+    # Define a special attack for each character
     if char1.Name == "Fortune Teller":
         player2.HP = player2.HP - 20
         turnRecord[0] = turnRecord[0] + \
@@ -83,7 +85,7 @@ def special(player1, char1, player2, char2, turnRecord):
 
 
 def saveGame(player1, player2, gameObject):
-    # save the game state, should happen every time it changes
+    # Save the game state, should happen every time it changes
     if player1.Name == gameObject.player1User:
         gameObject.player1HP = player1.HP
         gameObject.player1Attack = player1.Attack
@@ -104,13 +106,14 @@ def saveGame(player1, player2, gameObject):
 
 
 def resolve(player1, act1, player2, act2, char1, char2, gameObject):
-    # just apply to game in order act1 and act2 based on the character stats
-    # sorry it's a bit messy
+    # Just apply to game in order act1 and act2 based on the character stats
     turnRecord = [""]
-
     if checkWin(gameObject) == True:
         turnRecord = "The game is over!"
         return turnRecord
+
+    # PLAYER 1 ACTION
+
     if act1 == "Attack":
         if random.randint(1, 100) > player2.Dodge:
             player2.HP = player2.HP - player1.Attack
@@ -125,14 +128,17 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
         if checkWin(gameObject):
             turnRecord[0] = turnRecord[0] + "And the game is over!"
             return turnRecord[0]
+
     elif act1 == "Dodge":
         player1.Dodge = char1.Dodge + 50
         turnRecord[0] = turnRecord[0]+"%s is ready to dodge!\n" % (char1.Name)
         saveGame(player1, player2, gameObject)
+
     elif act1 == "Power":
         player1.Attack = char1.Attack*2
         turnRecord[0] = turnRecord[0]+"%s readies to strike!\n" % (char1.Name)
         saveGame(player1, player2, gameObject)
+
     elif act1 == "Special":
         a = 1  # aka do nothing yet
         special(player1, char1, player2, char2, turnRecord)
@@ -140,7 +146,9 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
         if checkWin(gameObject):
             turnRecord[0] = turnRecord[0] + "And the game is over!"
             return turnRecord[0]
-    # now for player2
+
+    # PLAYER 2 ACTION
+
     if act2 == "Attack":
         if random.randint(1, 100) > player1.Dodge:
             player1.HP = player1.HP - player2.Attack
@@ -155,21 +163,25 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
         if checkWin(gameObject):
             turnRecord[0] = turnRecord[0] + "And the game is over!"
             return turnRecord[0]
+
     elif act2 == "Dodge":
         player2.Dodge = char2.Dodge + 50
         turnRecord[0] = turnRecord[0]+"%s is ready to dodge!\n" % (char2.Name)
         saveGame(player1, player2, gameObject)
+
     elif act2 == "Power":
         player2.Attack = char2.Attack*2
         turnRecord[0] = turnRecord[0]+"%s readies to strike!\n" % (char2.Name)
         saveGame(player1, player2, gameObject)
+
     elif act2 == "Special":
         special(player2, char2, player1, char1, turnRecord)
         saveGame(player1, player2, gameObject)
         if checkWin(gameObject):
             turnRecord[0] = turnRecord[0] + "And the game is over!"
             return turnRecord[0]
-    # reset actions
+
+    # Reset actions
     gameObject.player1Action = None
     gameObject.player2Action = None
     gameObject.save()
@@ -179,15 +191,15 @@ def resolve(player1, act1, player2, act2, char1, char2, gameObject):
 
 @database_sync_to_async
 def turn(room_name, turnRecord):
-    # we get set up to resolve a turn, grab all the relevant stats and game info
-    # get game object
+    # Get set up to resolve a turn, grab all the relevant stats and game info
+    # Get game object
     gameObject = models.Game.objects.get(gameRoom=room_name)
     char1 = characters.get(gameObject.player1Char)
     char2 = characters.get(gameObject.player2Char)
     act1 = gameObject.player1Action
     act2 = gameObject.player2Action
 
-    # we check speed, then resolve with either player1 or player 2 going first
+    # Check speed, then resolve with either player1 or player 2 going first
     if char1.Speed >= char2.Speed:
         player1 = Player(gameObject.player1User, gameObject.player1HP,
                          gameObject.player1Attack, gameObject.player1Dodge)
@@ -206,7 +218,7 @@ def turn(room_name, turnRecord):
 
 @database_sync_to_async
 def joinGame(room_name, name):
-    # join as p2 if possible
+    # Join as p2 if possible
     gameObject = models.Game.objects.get(gameRoom=room_name)
     if not gameObject.player2User and name != gameObject.player1User:
         gameObject.player2User = name

@@ -1,3 +1,6 @@
+# Defines the Character class (fighter type)
+
+
 class Character:
     def __init__(self, Name, HP, Attack, Dodge, Speed):
         self.Name = Name
