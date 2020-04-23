@@ -33,7 +33,7 @@ def history(request):
     gameList = chatModels.Game.objects.filter(
         player1User=name) | chatModels.Game.objects.filter(player2User=name)
     countWins = gameList.filter(winner=name).count()
-    countLosses = gameList.count() - gameList.filter(winner=None).count()
+    countLosses = gameList.count() - countWins - gameList.filter(winner=None).count()
     context = {'battles': gameList,
                'user': name,
                'countWins': countWins,
