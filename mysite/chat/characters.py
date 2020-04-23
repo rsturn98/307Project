@@ -8,9 +8,9 @@ class Character:
 
 
 CharacterDict = {
-    'Rogue': Character('Rogue', 100, 20, 20, 10),
-    'Fighter': Character('Fighter', 500, 100, 0, 0),
-    'Wizard': Character('Wizard', 20, 250, 60, 50)
+    'Guru': Character('Guru', 100, 20, 20, 10),
+    'Medium': Character('Medium', 500, 100, 0, 0),
+    'Fortune Teller': Character('Fortune Teller', 20, 250, 60, 50)
 }
 
 

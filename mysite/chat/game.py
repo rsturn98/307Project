@@ -68,18 +68,18 @@ def checkWin(gameObject):
 
 def special(player1, char1, player2, char2, turnRecord):
     # define a special attack for each character
-    if char1.Name == "Wizard":
+    if char1.Name == "Fortune Teller":
         player2.HP = player2.HP - 20
         turnRecord[0] = turnRecord[0] + \
-            "%s uses a magic missile!\n" % (char1.Name)
-    elif char1.Name == "Brutus":
+            "%s throws a crystal ball!\n" % (char1.Name)
+    elif char1.Name == "Guru":
         player1.HP = player1.HP + 50
         turnRecord[0] = turnRecord[0] + \
-            "%s gets a second wind!\n" % (char1.Name)
-    elif char1.Name == "Terminator":
+            "%s heals from cosmic vibrations!\n" % (char1.Name)
+    elif char1.Name == "Medium":
         player2.Dodge = -100
         turnRecord[0] = turnRecord[0] + \
-            "%s locks onto target!\n" % (char1.Name)
+            "%s surrounds foe with spirits!\n" % (char1.Name)
 
 
 def saveGame(player1, player2, gameObject):
