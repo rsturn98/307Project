@@ -30,9 +30,12 @@ def chat(request):
 @login_required
 def history(request):
     name = str(request.user.get_username())
-    gameList = chatModels.Game.objects.all()
+    gameList = chatModels.Game.objects.filter(
+        player1User=name) | chatModels.Game.objects.filter(player2User=name)
+    countWins = gameList.filter(winner=name).count()
     context = {'battles': gameList,
-               'user': name}  # EDIT -- needs to used database
+               'user': name,
+               'countWins': countWins}  # EDIT -- needs to used database
     return render(request, "account/game-history.html", context)
 
 # LIST CHARACTERS CHOICES

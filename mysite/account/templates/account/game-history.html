@@ -4,6 +4,7 @@
 <!-- MATCH HISTORY -->
 
         <h1 class="text-center">Game History<h1>
+        <h3>Number of wins: {{countWins}}</h3>
         <table class="table table-dark">
         <!-- Headers -->
             <thead>
@@ -16,7 +17,6 @@
             </thead>
             <tbody>
                 {% for b in battles %} 
-                {% if b.player1User == user or b.player2User == user %}
                 <tr>
                     <!-- Date -->
                     <td>{{b.date}}</td>
@@ -47,7 +47,6 @@
                         {% endif %}
                     </td>
                 </tr>
-                {% endif %}
                 {% endfor %}
             </tbody>
         </table>
